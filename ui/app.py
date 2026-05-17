@@ -130,7 +130,13 @@ with st.sidebar:
     if base_state.npa_architecture:
         st.markdown(f"**{t('npa_zones_count')}:** {len(base_state.npa_architecture.zones)}")
         for z in base_state.npa_architecture.zones:
-            st.markdown(f"• {z.name} ({z.fire_zones_count} {t('fire_zones_short')})")
+            zone_label = z.name_en if get_lang() == "en" and z.name_en else z.name
+            # Singular/plural для EN
+            if get_lang() == "en":
+                fire_zones_text = "fire zone" if z.fire_zones_count == 1 else "fire zones"
+            else:
+                fire_zones_text = t("fire_zones_short")
+            st.markdown(f"• {zone_label} ({z.fire_zones_count} {fire_zones_text})")
     
     st.markdown("---")
     st.markdown(f"### {t('comparison_set')}")

@@ -292,6 +292,7 @@ class NPAZone(BaseModel):
     zone_id: str  # унікальний слаг: "shelter", "parking", "main"
     zone_type: NPAZoneType
     name: str  # людиночитна назва: "Укриття цивільного захисту"
+    name_en: Optional[str] = None  # англомовна назва для двомовного UI
     
     # Чи потребує НЕЗАЛЕЖНОГО ППКП (так — окремий прилад; ні — додаткова петля головного)
     requires_independent_panel: bool = True
