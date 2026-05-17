@@ -1,0 +1,3166 @@
+{
+  "catalog_version": "0.1.0",
+  "last_updated": "2026-05-11",
+  "manufacturers": [
+    {
+      "manufacturer_id": "tiras",
+      "name_ua": "Tiras",
+      "name_en": "Tiras",
+      "country_iso2": "UA",
+      "founded_year": null,
+      "tier": "budget",
+      "system_type": "mixed",
+      "warranty_months": 36,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": "Прямі продажі від виробника",
+        "contact": null,
+        "service_cities": [
+          "Київ",
+          "Львів",
+          "Дніпро",
+          "Одеса",
+          "Харків",
+          "Запоріжжя"
+        ],
+        "response_time_hours": 24
+      },
+      "data_status": "complete",
+      "last_updated": "2026-05-11",
+      "notes_internal": "Ціни з FireCompare_Catalog_Forms.xlsx",
+      "notes_strengths": [
+        "Українське виробництво — швидка логістика і сервіс",
+        "Найкращий CAPEX серед адресних систем у UA",
+        "DETECTO PLUS — передача рівня забруднення на ППКП",
+        "Підтримка LiFePO4 батарей",
+        "Широка сервісна мережа в Україні"
+      ],
+      "notes_weaknesses": [
+        "Обмежена міжнародна сертифікація (тільки ДСТУ EN 54)",
+        "Базовий рівень захисту від хибних спрацювань",
+        "Хмарний моніторинг через 3rd-party шлюзи"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4",
+            "-7",
+            "-17",
+            "-18"
+          ],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "basic",
+        "false_alarm_technologies": [
+          "DETECTO_PLUS_diagnostics"
+        ],
+        "cloud_monitoring": {
+          "available": false,
+          "platform_name": null,
+          "notes": null
+        },
+        "mobile_app": {
+          "available": false,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "none",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "none",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "none",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": false,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "tiras_prime_a",
+          "model_name": "PRIME A (2 петлі)",
+          "panel_type": "modular",
+          "max_loops": 2,
+          "devices_per_loop": 250,
+          "max_total_devices": 500,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 8,
+          "interfaces": [
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 33170.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "tiras_prime_xl",
+          "model_name": "PRIME XL (32 зони)",
+          "panel_type": "compact",
+          "max_loops": 32,
+          "devices_per_loop": 32,
+          "max_total_devices": 1024,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 22690.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "Безадресна, конвенційна"
+        },
+        {
+          "panel_id": "tiras_prime_l",
+          "model_name": "PRIME L (16 зон)",
+          "panel_type": "compact",
+          "max_loops": 16,
+          "devices_per_loop": 32,
+          "max_total_devices": 512,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 17100.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "Безадресна"
+        },
+        {
+          "panel_id": "tiras_prime_m",
+          "model_name": "PRIME M (8 зон)",
+          "panel_type": "compact",
+          "max_loops": 8,
+          "devices_per_loop": 32,
+          "max_total_devices": 256,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 9330.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "tiras_prime_s",
+          "model_name": "PRIME S (4 зони)",
+          "panel_type": "compact",
+          "max_loops": 4,
+          "devices_per_loop": 32,
+          "max_total_devices": 128,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 8400.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [
+        {
+          "detector_id": "tiras_mlt110",
+          "model_name": "DETECTO MLT110",
+          "detector_type": "multi_sensor",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "short_circuit_isolator"
+          ],
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1378.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "tiras_smk110",
+          "model_name": "DETECTO SMK110",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "short_circuit_isolator",
+            "dirt_compensation"
+          ],
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1250.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "tiras_smk100",
+          "model_name": "DETECTO SMK100",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1020.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "tiras_ht110",
+          "model_name": "DETECTO HT110",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "short_circuit_isolator"
+          ],
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1070.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "tiras_ht100",
+          "model_name": "DETECTO HT100",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 820.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "io_modules": [
+        {
+          "module_id": "tiras_am_in4",
+          "model_name": "AM-IN4",
+          "module_type": "input",
+          "inputs_count": 4,
+          "outputs_count": 0,
+          "address_consumption": 1,
+          "output_type": null,
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 3890.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "tiras_am_out2r",
+          "model_name": "AM-OUT2R",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 2,
+          "address_consumption": 1,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1900.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "tiras_am_out1r_plus",
+          "model_name": "AM-OUT1R+",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 1,
+          "address_consumption": 1,
+          "output_type": "relay",
+          "output_supervised": true,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1790.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "tiras_am_multi",
+          "model_name": "AM-Multi",
+          "module_type": "combined",
+          "inputs_count": 2,
+          "outputs_count": 2,
+          "address_consumption": 2,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 1680.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "tiras_am_multi_plus",
+          "model_name": "AM-Multi+",
+          "module_type": "combined",
+          "inputs_count": 2,
+          "outputs_count": 2,
+          "address_consumption": 2,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "tiras_prime_a"
+          ],
+          "price_uah_no_vat": 6640.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "sounders": [
+        {
+          "sounder_id": "tiras_alarmo_110",
+          "model_name": "ALARMO 110",
+          "has_sound": true,
+          "has_strobe": false,
+          "en54_23_category": null,
+          "address_consumption": 1,
+          "loop_powered": true,
+          "price_uah_no_vat": 1440.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "sounder_id": "tiras_alarmo_100",
+          "model_name": "ALARMO 100",
+          "has_sound": true,
+          "has_strobe": false,
+          "en54_23_category": null,
+          "address_consumption": 1,
+          "loop_powered": true,
+          "price_uah_no_vat": 1330.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "sounder_id": "tiras_osz",
+          "model_name": "ОСЗ",
+          "has_sound": true,
+          "has_strobe": true,
+          "en54_23_category": null,
+          "address_consumption": 1,
+          "loop_powered": false,
+          "price_uah_no_vat": 1040.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "manual_call_points": [
+        {
+          "mcp_id": "tiras_mnl110",
+          "model_name": "DETECTO MNL110",
+          "has_integrated_isolator": true,
+          "address_consumption": 1,
+          "price_uah_no_vat": 1460.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "mcp_id": "tiras_mnl100",
+          "model_name": "DETECTO MNL100",
+          "has_integrated_isolator": false,
+          "address_consumption": 1,
+          "price_uah_no_vat": 1300.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "omega",
+      "name_ua": "Омега",
+      "name_en": "Omega (Project AO)",
+      "country_iso2": "UA",
+      "founded_year": null,
+      "tier": "mid",
+      "system_type": "addressable_threshold",
+      "warranty_months": 36,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": "Прямі продажі від виробника (Харків)",
+        "contact": null,
+        "service_cities": [
+          "Київ",
+          "Харків",
+          "Дніпро",
+          "Львів",
+          "Одеса"
+        ],
+        "response_time_hours": 24
+      },
+      "data_status": "complete",
+      "last_updated": "2026-05-11",
+      "notes_internal": "Ціни з FireCompare_Catalog_Forms.xlsx. Оповіщувачі і MCP — постачаються від Tiras.",
+      "notes_strengths": [
+        "Резервована шина RS-485 ×2 — унікальна перевага в UA сегменті",
+        "Найдешевші адресні сповіщувачі на ринку (СПДОТА 445 грн)",
+        "Повна UA-сертифікація і експертиза",
+        "Розширена сервісна мережа",
+        "Підтримка пожежогасіння (ППУ-ПТ)"
+      ],
+      "notes_weaknesses": [
+        "4-адресні блоки БСА/БКА — створюють архітектурний податок",
+        "Адресно-порогова архітектура — обмежений захист від хибних",
+        "Хмарний моніторинг не передбачено",
+        "Обмежена міжнародна сертифікація",
+        "Оповіщувачі — постачання через Tiras (залежність)"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4",
+            "-7",
+            "-17",
+            "-18"
+          ],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "basic",
+        "false_alarm_technologies": [],
+        "cloud_monitoring": {
+          "available": false,
+          "platform_name": null,
+          "notes": null
+        },
+        "mobile_app": {
+          "available": false,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "none",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "none",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "none",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": false,
+          "network": true,
+          "loop": false,
+          "notes": "Резервована шина RS-485 ×2"
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "omega_pu_p_4",
+          "model_name": "ПУ-П 4 (4 кільця)",
+          "panel_type": "modular",
+          "max_loops": 4,
+          "devices_per_loop": 60,
+          "max_total_devices": 240,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 8,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 50655.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "omega_pu_p_8",
+          "model_name": "ПУ-П 8 (8 кілець)",
+          "panel_type": "modular",
+          "max_loops": 8,
+          "devices_per_loop": 60,
+          "max_total_devices": 480,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 8,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 55627.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "omega_ppu_pt_4",
+          "model_name": "ППУ-ПТ 4 (4 кільця)",
+          "panel_type": "modular",
+          "max_loops": 4,
+          "devices_per_loop": 60,
+          "max_total_devices": 240,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 8,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 59807.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "З функцією пожежогасіння"
+        },
+        {
+          "panel_id": "omega_ppu_pt_8",
+          "model_name": "ППУ-ПТ 8 (8 кілець)",
+          "panel_type": "modular",
+          "max_loops": 8,
+          "devices_per_loop": 60,
+          "max_total_devices": 480,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 8,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 65857.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "omega_ppkp_p_4",
+          "model_name": "ППКП-П 4 (розширення)",
+          "panel_type": "modular",
+          "max_loops": 4,
+          "devices_per_loop": 60,
+          "max_total_devices": 240,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 44506.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "omega_ppkp_p_8",
+          "model_name": "ППКП-П 8 (розширення)",
+          "panel_type": "modular",
+          "max_loops": 8,
+          "devices_per_loop": 60,
+          "max_total_devices": 480,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 47333.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [
+        {
+          "detector_id": "omega_spdota",
+          "model_name": "СПДОТА",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8",
+            "omega_ppu_pt_4",
+            "omega_ppu_pt_8",
+            "omega_ppkp_p_4",
+            "omega_ppkp_p_8"
+          ],
+          "price_uah_no_vat": 445.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "omega_sptta",
+          "model_name": "СПТТА",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8",
+            "omega_ppu_pt_4",
+            "omega_ppu_pt_8",
+            "omega_ppkp_p_4",
+            "omega_ppkp_p_8"
+          ],
+          "price_uah_no_vat": 360.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "omega_sppta",
+          "model_name": "СППТА (полум'я)",
+          "detector_type": "flame",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8"
+          ],
+          "price_uah_no_vat": 4670.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "io_modules": [
+        {
+          "module_id": "omega_bsa",
+          "model_name": "БСА",
+          "module_type": "input",
+          "inputs_count": 4,
+          "outputs_count": 0,
+          "address_consumption": 4,
+          "output_type": null,
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8",
+            "omega_ppu_pt_4",
+            "omega_ppu_pt_8"
+          ],
+          "price_uah_no_vat": 560.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "omega_bka_220",
+          "model_name": "БКА-220",
+          "module_type": "combined",
+          "inputs_count": 2,
+          "outputs_count": 1,
+          "address_consumption": 4,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8",
+            "omega_ppu_pt_4",
+            "omega_ppu_pt_8"
+          ],
+          "price_uah_no_vat": 925.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "omega_brvu_4",
+          "model_name": "БРВУ-4",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 4,
+          "address_consumption": 4,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": true,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8",
+            "omega_ppu_pt_4",
+            "omega_ppu_pt_8"
+          ],
+          "price_uah_no_vat": 10076.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "omega_brvu_8",
+          "model_name": "БРВУ-8",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 8,
+          "address_consumption": 4,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": true,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "omega_pu_p_4",
+            "omega_pu_p_8",
+            "omega_ppu_pt_4",
+            "omega_ppu_pt_8"
+          ],
+          "price_uah_no_vat": 13200.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "sounders": [
+        {
+          "sounder_id": "omega_alarmo_via_tiras",
+          "model_name": "ALARMO 100 (через Tiras)",
+          "has_sound": true,
+          "has_strobe": false,
+          "en54_23_category": null,
+          "address_consumption": 1,
+          "loop_powered": true,
+          "price_uah_no_vat": 1330.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "manual_call_points": [
+        {
+          "mcp_id": "omega_spra",
+          "model_name": "СПРА",
+          "has_integrated_isolator": false,
+          "address_consumption": 1,
+          "price_uah_no_vat": 535.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "varta",
+      "name_ua": "Варта (Електронмаш)",
+      "name_en": "Varta (Elektronmash)",
+      "country_iso2": "UA",
+      "founded_year": null,
+      "tier": "mid",
+      "system_type": "mixed",
+      "warranty_months": 36,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": "СКБ Електронмаш (Київ)",
+        "contact": null,
+        "service_cities": [
+          "Київ",
+          "Дніпро",
+          "Львів",
+          "Одеса"
+        ],
+        "response_time_hours": 48
+      },
+      "data_status": "complete",
+      "last_updated": "2026-05-11",
+      "notes_internal": "Ціни з FireCompare_Catalog_Forms.xlsx",
+      "notes_strengths": [
+        "Українське виробництво — швидка логістика",
+        "Найбільша адресна ємність серед UA-брендів (1905 адрес)",
+        "Дві лінійки (конвенційна + адресна)",
+        "Модульна архітектура з блоками розширення (CV1510, CV1514)",
+        "Найдешевший конвенційний ППКП в каталозі"
+      ],
+      "notes_weaknesses": [
+        "Менша сервісна мережа порівняно з Tiras",
+        "Базовий захист від хибних спрацювань",
+        "Відсутність хмари і мобільного застосунку",
+        "Відсутня міжнародна сертифікація"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4",
+            "-7",
+            "-17"
+          ],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "basic",
+        "false_alarm_technologies": [],
+        "cloud_monitoring": {
+          "available": false,
+          "platform_name": null,
+          "notes": null
+        },
+        "mobile_app": {
+          "available": false,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "none",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "none",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "none",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": false,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "varta_adres",
+          "model_name": "Варта-Адрес",
+          "panel_type": "modular",
+          "max_loops": 15,
+          "devices_per_loop": 127,
+          "max_total_devices": 1905,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 34410.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "Модульна, розширюється CV1510"
+        },
+        {
+          "panel_id": "varta_adres_cv1500",
+          "model_name": "Варта-Адрес CV1500",
+          "panel_type": "compact",
+          "max_loops": 4,
+          "devices_per_loop": 127,
+          "max_total_devices": 508,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 59184.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "Компактний корпус"
+        },
+        {
+          "panel_id": "varta_1_2",
+          "model_name": "Варта-1/2",
+          "panel_type": "compact",
+          "max_loops": 2,
+          "devices_per_loop": 20,
+          "max_total_devices": 40,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 5988.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "Безадресна, малі об'єкти"
+        },
+        {
+          "panel_id": "varta_1_4",
+          "model_name": "Варта-1/4",
+          "panel_type": "compact",
+          "max_loops": 4,
+          "devices_per_loop": 20,
+          "max_total_devices": 80,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 6552.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "varta_1_8",
+          "model_name": "Варта-1/8",
+          "panel_type": "compact",
+          "max_loops": 8,
+          "devices_per_loop": 20,
+          "max_total_devices": 160,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 6846.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "varta_1_816",
+          "model_name": "Варта-1/816",
+          "panel_type": "compact",
+          "max_loops": 16,
+          "devices_per_loop": 20,
+          "max_total_devices": 320,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 9774.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "varta_1_832",
+          "model_name": "Варта-1/832",
+          "panel_type": "compact",
+          "max_loops": 32,
+          "devices_per_loop": 20,
+          "max_total_devices": 640,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 25284.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [
+        {
+          "detector_id": "varta_ipd_a",
+          "model_name": "ИПД-А",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "varta_adres",
+            "varta_adres_cv1500"
+          ],
+          "price_uah_no_vat": 1098.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "varta_ipt_a",
+          "model_name": "ИПТ-А",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "varta_adres",
+            "varta_adres_cv1500"
+          ],
+          "price_uah_no_vat": 1098.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "varta_ipk_8",
+          "model_name": "ИПК-8",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "varta_1_2",
+            "varta_1_4",
+            "varta_1_8",
+            "varta_1_816",
+            "varta_1_832"
+          ],
+          "price_uah_no_vat": 288.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "varta_ipk_9",
+          "model_name": "ИПК-9",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "varta_1_2",
+            "varta_1_4",
+            "varta_1_8",
+            "varta_1_816",
+            "varta_1_832"
+          ],
+          "price_uah_no_vat": 282.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "io_modules": [
+        {
+          "module_id": "varta_cv1514",
+          "model_name": "CV1514",
+          "module_type": "combined",
+          "inputs_count": 4,
+          "outputs_count": 2,
+          "address_consumption": 2,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "varta_adres",
+            "varta_adres_cv1500"
+          ],
+          "price_uah_no_vat": 7728.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "varta_cv1510",
+          "model_name": "CV1510",
+          "module_type": "universal",
+          "inputs_count": 4,
+          "outputs_count": 4,
+          "address_consumption": 4,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "varta_adres"
+          ],
+          "price_uah_no_vat": 9450.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "sounders": [
+        {
+          "sounder_id": "varta_zpo",
+          "model_name": "ЗПО",
+          "has_sound": true,
+          "has_strobe": false,
+          "en54_23_category": null,
+          "address_consumption": 1,
+          "loop_powered": false,
+          "price_uah_no_vat": 360.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "manual_call_points": [
+        {
+          "mcp_id": "varta_ipr_a",
+          "model_name": "ИПР-А",
+          "has_integrated_isolator": false,
+          "address_consumption": 1,
+          "price_uah_no_vat": 1332.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "cofem",
+      "name_ua": "Cofem",
+      "name_en": "Cofem",
+      "country_iso2": "ES",
+      "founded_year": 1973,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": true,
+      "ua_distributor": {
+        "company_name": "(уточнити — поточний UA-дистриб'ютор)",
+        "contact": null,
+        "service_cities": [
+          "Київ",
+          "Львів",
+          "Дніпро",
+          "Одеса"
+        ],
+        "response_time_hours": 48
+      },
+      "data_status": "complete",
+      "last_updated": "2026-05-11",
+      "notes_internal": "Ціни оновлено з прайс-листа дистриб'ютора 11.05.2026. Курс 52.5 грн/євро.",
+      "notes_strengths": [
+        "Алгоритмічна детекція з drift compensation",
+        "1-адресні I/O модулі (MSTAY8 на 8 входів, MDA2YLT на 2 реле) — економія адрес",
+        "Native cloud (Cofem Remote / Cofem 360)",
+        "EN 54 + CE — підходить для дуальної UA+UK юрисдикції",
+        "Voice alarm інтеграція через сертифікованих партнерів",
+        "Інтегрований сповіщувач A50SHILD (дим+тепло+сирена+строб)"
+      ],
+      "notes_weaknesses": [
+        "Вищий CAPEX за UA-бренди",
+        "ДСТУ EN 54 в процесі сертифікації",
+        "BMS-інтеграція через шлюз, не нативна"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4",
+            "-7",
+            "-17",
+            "-18",
+            "-23"
+          ],
+          "certification_body": "AENOR",
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "in_process",
+          "notes": "Процес активний; покривається професійною відповідальністю проєктувальника",
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": "EN 54 + CE приймається в UK через міжнародну гармонізацію",
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "drift_compensation",
+          "adaptive_thresholds",
+          "algorithmic_signal_analysis"
+        ],
+        "cloud_monitoring": {
+          "available": true,
+          "platform_name": "Cofem Remote / Cofem 360",
+          "notes": null
+        },
+        "mobile_app": {
+          "available": true,
+          "platforms": [
+            "iOS",
+            "Android"
+          ],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "gateway",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "gateway",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "partner",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": false,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "cofem_rubi",
+          "model_name": "Rubí (1 шлейф)",
+          "panel_type": "compact",
+          "max_loops": 1,
+          "devices_per_loop": 64,
+          "max_total_devices": 64,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 20334.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_quartz_1",
+          "model_name": "Quartz (1 шлейф)",
+          "panel_type": "compact",
+          "max_loops": 1,
+          "devices_per_loop": 99,
+          "max_total_devices": 99,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 26832.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_quartz_2",
+          "model_name": "Quartz (2 шлейфи)",
+          "panel_type": "compact",
+          "max_loops": 2,
+          "devices_per_loop": 99,
+          "max_total_devices": 198,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 28285.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_compact_lyon_1",
+          "model_name": "Compact Lyon (1 шлейф)",
+          "panel_type": "hybrid",
+          "max_loops": 1,
+          "devices_per_loop": 99,
+          "max_total_devices": 99,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 24729.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_compact_lyon_2",
+          "model_name": "Compact Lyon (2 шлейфи)",
+          "panel_type": "hybrid",
+          "max_loops": 2,
+          "devices_per_loop": 99,
+          "max_total_devices": 198,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 25866.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_zafir_1",
+          "model_name": "Zafir (1 шлейф)",
+          "panel_type": "hybrid",
+          "max_loops": 1,
+          "devices_per_loop": 226,
+          "max_total_devices": 226,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 31492.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_zafir_2",
+          "model_name": "Zafir (2 шлейфи)",
+          "panel_type": "hybrid",
+          "max_loops": 2,
+          "devices_per_loop": 226,
+          "max_total_devices": 452,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 33145.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_onyx_1",
+          "model_name": "Onyx (1 шлейф)",
+          "panel_type": "modular",
+          "max_loops": 1,
+          "devices_per_loop": 226,
+          "max_total_devices": 226,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 33540.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_onyx_2",
+          "model_name": "Onyx (2 шлейфи)",
+          "panel_type": "modular",
+          "max_loops": 2,
+          "devices_per_loop": 226,
+          "max_total_devices": 452,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 35552.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_lyon_1",
+          "model_name": "Lyon Remote (1 шлейф)",
+          "panel_type": "modular",
+          "max_loops": 1,
+          "devices_per_loop": 226,
+          "max_total_devices": 226,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 32,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 62704.0,
+          "pricing_status": "quoted",
+          "pricing_notes": "Флагман, алгоритмічна детекція"
+        },
+        {
+          "panel_id": "cofem_lyon_2",
+          "model_name": "Lyon Remote (2 шлейфи)",
+          "panel_type": "modular",
+          "max_loops": 2,
+          "devices_per_loop": 226,
+          "max_total_devices": 452,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 32,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 64466.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "cofem_lyon_4",
+          "model_name": "Lyon Remote (4 шлейфи)",
+          "panel_type": "modular",
+          "max_loops": 4,
+          "devices_per_loop": 226,
+          "max_total_devices": 904,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 32,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": 74415.0,
+          "pricing_status": "quoted",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [
+        {
+          "detector_id": "cofem_a50s",
+          "model_name": "A50S",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "drift_compensation",
+            "adaptive_thresholds"
+          ],
+          "compatible_panel_ids": [
+            "cofem_rubi",
+            "cofem_quartz_1",
+            "cofem_quartz_2",
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 1816.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "cofem_a50si",
+          "model_name": "A50SI",
+          "detector_type": "smoke_optical",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "drift_compensation",
+            "adaptive_thresholds",
+            "short_circuit_isolator"
+          ],
+          "compatible_panel_ids": [
+            "cofem_rubi",
+            "cofem_quartz_1",
+            "cofem_quartz_2",
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 2013.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "cofem_a50h",
+          "model_name": "A50H",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [],
+          "compatible_panel_ids": [
+            "cofem_rubi",
+            "cofem_quartz_1",
+            "cofem_quartz_2",
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 1727.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "cofem_a50hi",
+          "model_name": "A50HI",
+          "detector_type": "heat_max",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "short_circuit_isolator"
+          ],
+          "compatible_panel_ids": [
+            "cofem_rubi",
+            "cofem_quartz_1",
+            "cofem_quartz_2",
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 1917.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "cofem_a50shi",
+          "model_name": "A50SHI",
+          "detector_type": "multi_sensor",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "drift_compensation",
+            "sensor_fusion",
+            "short_circuit_isolator"
+          ],
+          "compatible_panel_ids": [
+            "cofem_rubi",
+            "cofem_quartz_1",
+            "cofem_quartz_2",
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 1989.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "detector_id": "cofem_a50shild",
+          "model_name": "A50SHILD",
+          "detector_type": "multi_sensor",
+          "loop_powered": true,
+          "current_idle_ma": null,
+          "current_alarm_ma": null,
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "algorithmic_features": [
+            "drift_compensation",
+            "sensor_fusion",
+            "integrated_sounder",
+            "integrated_strobe"
+          ],
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 3863.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "io_modules": [
+        {
+          "module_id": "cofem_mstay8",
+          "model_name": "MSTAY8",
+          "module_type": "input",
+          "inputs_count": 8,
+          "outputs_count": 0,
+          "address_consumption": 1,
+          "output_type": null,
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 5159.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_mstay",
+          "model_name": "MSTAY",
+          "module_type": "input",
+          "inputs_count": 2,
+          "outputs_count": 0,
+          "address_consumption": 1,
+          "output_type": null,
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 2492.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_mda2ylt",
+          "model_name": "MDA2YLT",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 2,
+          "address_consumption": 1,
+          "output_type": "voltage_free",
+          "output_supervised": true,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 5466.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_mda1y",
+          "model_name": "MDA1Y",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 1,
+          "address_consumption": 1,
+          "output_type": "relay",
+          "output_supervised": true,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": true,
+          "external_voltage_v": 30.0,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 3322.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_mda2y",
+          "model_name": "MDA2Y",
+          "module_type": "output",
+          "inputs_count": 0,
+          "outputs_count": 2,
+          "address_consumption": 1,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": true,
+          "external_voltage_v": 30.0,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 3738.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_myoa",
+          "model_name": "MYOA",
+          "module_type": "combined",
+          "inputs_count": 1,
+          "outputs_count": 1,
+          "address_consumption": 1,
+          "output_type": "relay",
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 4568.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_kmay",
+          "model_name": "KMAY",
+          "module_type": "conv_zone",
+          "inputs_count": 1,
+          "outputs_count": 0,
+          "address_consumption": 1,
+          "output_type": null,
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 2906.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "module_id": "cofem_kaby",
+          "model_name": "KABY",
+          "module_type": "isolator",
+          "inputs_count": 0,
+          "outputs_count": 0,
+          "address_consumption": 1,
+          "output_type": null,
+          "output_supervised": false,
+          "output_max_voltage_v": null,
+          "output_max_current_a": null,
+          "needs_external_power": false,
+          "external_voltage_v": null,
+          "compatible_panel_ids": [
+            "cofem_compact_lyon_1",
+            "cofem_compact_lyon_2",
+            "cofem_zafir_1",
+            "cofem_zafir_2",
+            "cofem_onyx_1",
+            "cofem_onyx_2",
+            "cofem_lyon_1",
+            "cofem_lyon_2",
+            "cofem_lyon_4"
+          ],
+          "price_uah_no_vat": 2492.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "sounders": [
+        {
+          "sounder_id": "cofem_sirend",
+          "model_name": "SIREND",
+          "has_sound": true,
+          "has_strobe": false,
+          "en54_23_category": null,
+          "address_consumption": 1,
+          "loop_powered": true,
+          "price_uah_no_vat": 3805.0,
+          "pricing_status": "quoted"
+        },
+        {
+          "sounder_id": "cofem_sirendl",
+          "model_name": "SIRENDL",
+          "has_sound": true,
+          "has_strobe": true,
+          "en54_23_category": "W-2.4-6",
+          "address_consumption": 1,
+          "loop_powered": true,
+          "price_uah_no_vat": 4685.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "manual_call_points": [
+        {
+          "mcp_id": "cofem_pucay",
+          "model_name": "PUCAY",
+          "has_integrated_isolator": true,
+          "address_consumption": 1,
+          "price_uah_no_vat": 1418.0,
+          "pricing_status": "quoted"
+        }
+      ],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "bosch",
+      "name_ua": "Bosch",
+      "name_en": "Bosch",
+      "country_iso2": "DE",
+      "founded_year": null,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "preliminary",
+      "last_updated": "2026-05-11",
+      "notes_internal": "Архітектура AVENAR 2000/8000 з публічних datasheets. Ціни орієнтовні з US/IN ринків.",
+      "notes_strengths": [
+        "LSN improved протокол — 254 пристрої на петлі",
+        "AVENAR 8000 — до 8128 пристроїв (велика мережа)",
+        "Cloud-ready (Linux-based, IoT)",
+        "Voice alarm інтеграція через PRAESENSA",
+        "BACnet/OPC/FSI для BMS"
+      ],
+      "notes_weaknesses": [
+        "Висока преміум-ціна",
+        "Окрема лінійка для US-ринку (FPA-1000/5000)",
+        "ДСТУ EN 54 — через дистриб'ютора"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4"
+          ],
+          "certification_body": "VdS",
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "ISP",
+          "dual_ray_detection"
+        ],
+        "cloud_monitoring": {
+          "available": true,
+          "platform_name": "Bosch Connected",
+          "notes": null
+        },
+        "mobile_app": {
+          "available": true,
+          "platforms": [
+            "iOS",
+            "Android"
+          ],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "native",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "native",
+          "opc_ua": "native",
+          "knx": "none"
+        },
+        "voice_alarm": "native",
+        "wireless_extension": true,
+        "redundancy": {
+          "panel_controller": false,
+          "network": true,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "bosch_avenar_2000",
+          "model_name": "AVENAR 2000",
+          "panel_type": "modular",
+          "max_loops": 4,
+          "devices_per_loop": 254,
+          "max_total_devices": 1016,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 32,
+          "interfaces": [
+            "Ethernet",
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "bosch_avenar_8000",
+          "model_name": "AVENAR 8000",
+          "panel_type": "modular",
+          "max_loops": 32,
+          "devices_per_loop": 254,
+          "max_total_devices": 8128,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 32,
+          "interfaces": [
+            "Ethernet",
+            "RS485",
+            "USB"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "siemens",
+      "name_ua": "Siemens Cerberus",
+      "name_en": "Siemens Cerberus PRO",
+      "country_iso2": "CH",
+      "founded_year": null,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "preliminary",
+      "last_updated": "2026-05-11",
+      "notes_internal": "C-NET архітектура з мануалів. Ціни орієнтовні з EU-ринку.",
+      "notes_strengths": [
+        "Глибока інтеграція з Desigo CC (BMS)",
+        "Network до 64 панелей у кластері",
+        "ASA технологія (Advanced Signal Analysis)",
+        "Auto-detection C-NET пристроїв",
+        "До 1512 адрес на FC726"
+      ],
+      "notes_weaknesses": [
+        "Преміум-цінова політика",
+        "UA-дистриб'юція обмежена"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4"
+          ],
+          "certification_body": "VdS",
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "ASA",
+          "adaptive_thresholds"
+        ],
+        "cloud_monitoring": {
+          "available": true,
+          "platform_name": "Cerberus Cloud / Desigo CC",
+          "notes": null
+        },
+        "mobile_app": {
+          "available": true,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "native",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "gateway",
+          "opc_ua": "native",
+          "knx": "none"
+        },
+        "voice_alarm": "native",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": true,
+          "network": true,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "siemens_fc722",
+          "model_name": "FC722",
+          "panel_type": "compact",
+          "max_loops": 4,
+          "devices_per_loop": 126,
+          "max_total_devices": 504,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 64,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": -8,
+          "operating_temp_max_c": 42,
+          "ip_rating": null,
+          "operating_voltage_vdc": "20.5-28.6",
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "siemens_fc726",
+          "model_name": "FC726",
+          "panel_type": "modular",
+          "max_loops": 28,
+          "devices_per_loop": 54,
+          "max_total_devices": 1512,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 64,
+          "interfaces": [
+            "RS232",
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "hochiki",
+      "name_ua": "Hochiki",
+      "name_en": "Hochiki",
+      "country_iso2": "GB",
+      "founded_year": null,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "preliminary",
+      "last_updated": "2026-05-11",
+      "notes_internal": null,
+      "notes_strengths": [
+        "ESP — відкритий протокол",
+        "FireNET L@titude — до 16 петель × 400 точок",
+        "UK + US нативна сертифікація",
+        "Adaptive thresholds, day/night modes",
+        "5 modes detector behavior"
+      ],
+      "notes_weaknesses": [
+        "Хмара тільки через 3rd-party",
+        "UA-дистриб'юція обмежена"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4",
+            "-5",
+            "-7",
+            "-17",
+            "-18"
+          ],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": "LPCB",
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "drift_compensation",
+          "day_night_modes",
+          "5_response_modes"
+        ],
+        "cloud_monitoring": {
+          "available": false,
+          "platform_name": null,
+          "notes": "Через 3rd-party BMS"
+        },
+        "mobile_app": {
+          "available": false,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "native",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "gateway",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "partner",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": false,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "hochiki_firenet_plus_1127",
+          "model_name": "FireNET Plus 1127",
+          "panel_type": "compact",
+          "max_loops": 2,
+          "devices_per_loop": 127,
+          "max_total_devices": 254,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "hochiki_firenet_latitude",
+          "model_name": "FireNET L@titude",
+          "panel_type": "modular",
+          "max_loops": 16,
+          "devices_per_loop": 400,
+          "max_total_devices": 6400,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 64,
+          "interfaces": [
+            "RS485",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "apollo",
+      "name_ua": "Apollo",
+      "name_en": "Apollo Fire Detectors",
+      "country_iso2": "GB",
+      "founded_year": null,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "preliminary",
+      "last_updated": "2026-05-11",
+      "notes_internal": "OEM-постачальник — панелі від C-TEC, Morley, Gamewell. Для повної системи завжди 2 виробника.",
+      "notes_strengths": [
+        "Open protocol (XP95, Discovery)",
+        "Швидкий монтаж через XPERT-карти",
+        "Wireless через XPander (EN 54-25)",
+        "Native UK + LPCB",
+        "5 response modes на Discovery"
+      ],
+      "notes_weaknesses": [
+        "Apollo НЕ виробляє панелі — потрібен партнер",
+        "Закупівельна логіка ускладнена (2 виробники)",
+        "Хмара і моніторинг — через панель-партнера"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-5",
+            "-7",
+            "-11",
+            "-17",
+            "-18",
+            "-25"
+          ],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "partial",
+          "notes": "Через XP95A варіант (Gamewell-FCI)",
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "drift_compensation",
+          "5_response_modes"
+        ],
+        "cloud_monitoring": {
+          "available": false,
+          "platform_name": null,
+          "notes": "Залежить від обраного партнера панелі"
+        },
+        "mobile_app": {
+          "available": false,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "none",
+          "modbus_rtu": "partner",
+          "modbus_tcp": "partner",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "partner",
+        "wireless_extension": true,
+        "redundancy": {
+          "panel_controller": false,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "apollo_ctec_xfp",
+          "model_name": "C-TEC XFP (partner)",
+          "panel_type": "compact",
+          "max_loops": 1,
+          "devices_per_loop": 127,
+          "max_total_devices": 127,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 8,
+          "interfaces": [
+            "RS485"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": "Партнерська панель C-TEC + Apollo XP95"
+        }
+      ],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "esser",
+      "name_ua": "Esser (Honeywell)",
+      "name_en": "Esser by Honeywell",
+      "country_iso2": "DE",
+      "founded_year": null,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "preliminary",
+      "last_updated": "2026-05-11",
+      "notes_internal": null,
+      "notes_strengths": [
+        "IQ8Quad — детектор + sounder + strobe в 1 пристрої (унікально)",
+        "esserbus PLUS — до 127 пристроїв + 32 транспондерів на петлі",
+        "essernet — до 31 панелі в мережі",
+        "Native voice alarm",
+        "До 18 петель × 127 = 2286 пристроїв (IQ8Control M)"
+      ],
+      "notes_weaknesses": [
+        "Преміум-ціна",
+        "UA-дистриб'юція через Honeywell — обмежена"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-3",
+            "-4",
+            "-23"
+          ],
+          "certification_body": "VdS",
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "partial",
+          "notes": "Через Honeywell US лінійки",
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "TM_PM_modes",
+          "multi_sensor_fusion"
+        ],
+        "cloud_monitoring": {
+          "available": true,
+          "platform_name": "Honeywell Connected Building / WINMAG",
+          "notes": null
+        },
+        "mobile_app": {
+          "available": true,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "native",
+          "modbus_rtu": "native",
+          "modbus_tcp": "native",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "native",
+        "wireless_extension": true,
+        "redundancy": {
+          "panel_controller": true,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "esser_iq8_control_c",
+          "model_name": "IQ8Control C",
+          "panel_type": "compact",
+          "max_loops": 4,
+          "devices_per_loop": 127,
+          "max_total_devices": 508,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "RS485",
+            "RS232"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "esser_iq8_control_m",
+          "model_name": "IQ8Control M",
+          "panel_type": "modular",
+          "max_loops": 18,
+          "devices_per_loop": 127,
+          "max_total_devices": 2286,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 31,
+          "interfaces": [
+            "RS485",
+            "RS232",
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "schrack",
+      "name_ua": "Schrack Seconet",
+      "name_en": "Schrack Seconet",
+      "country_iso2": "AT",
+      "founded_year": null,
+      "tier": "premium",
+      "system_type": "algorithmic",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "preliminary",
+      "last_updated": "2026-05-11",
+      "notes_internal": "Активна UA-присутність. Унікальна повна редундантність.",
+      "notes_strengths": [
+        "ПОВНА redundancy (hardware + software + network + loop)",
+        "X-LINE до 250 пристроїв на петлі × 3500м",
+        "Integral IP MX — 16 петель × 4000 елементів",
+        "Native BACnet/OPC/MODBUS без шлюзів",
+        "Combined Fire+Extinguishing панель",
+        "Network до 4049 панелей (рекорд)",
+        "Ізолятори вбудовані в кожен X-LINE пристрій"
+      ],
+      "notes_weaknesses": [
+        "Найвища цінова категорія",
+        "Окрема серія для US-ринку"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [
+            "-2",
+            "-4"
+          ],
+          "certification_body": "VdS",
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "premium",
+        "false_alarm_technologies": [
+          "sensor_fusion",
+          "advanced_algorithms"
+        ],
+        "cloud_monitoring": {
+          "available": true,
+          "platform_name": "Integral Remote / Secolog IP",
+          "notes": null
+        },
+        "mobile_app": {
+          "available": true,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "native",
+          "modbus_rtu": "native",
+          "modbus_tcp": "native",
+          "opc_ua": "native",
+          "knx": "none"
+        },
+        "voice_alarm": "native",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": true,
+          "network": true,
+          "loop": true,
+          "notes": null
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "schrack_integral_c",
+          "model_name": "Integral C",
+          "panel_type": "compact",
+          "max_loops": 1,
+          "devices_per_loop": 250,
+          "max_total_devices": 250,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 1,
+          "interfaces": [
+            "Ethernet"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        },
+        {
+          "panel_id": "schrack_integral_ip_mx",
+          "model_name": "Integral IP MX",
+          "panel_type": "modular",
+          "max_loops": 16,
+          "devices_per_loop": 250,
+          "max_total_devices": 4000,
+          "polling_time_ms": null,
+          "max_loop_length_m": null,
+          "battery_max_ah": null,
+          "battery_monitoring_en54_4": false,
+          "network_max_panels": 4049,
+          "interfaces": [
+            "Ethernet",
+            "RS485",
+            "RS232"
+          ],
+          "operating_temp_min_c": null,
+          "operating_temp_max_c": null,
+          "ip_rating": null,
+          "operating_voltage_vdc": null,
+          "price_uah_no_vat": null,
+          "pricing_status": "estimated",
+          "pricing_notes": null
+        }
+      ],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    },
+    {
+      "manufacturer_id": "arton",
+      "name_ua": "Артон",
+      "name_en": "Arton",
+      "country_iso2": "UA",
+      "founded_year": 1998,
+      "tier": "mid",
+      "system_type": "mixed",
+      "warranty_months": 24,
+      "extended_warranty_available": false,
+      "ua_distributor": {
+        "company_name": null,
+        "contact": null,
+        "service_cities": [],
+        "response_time_hours": null
+      },
+      "data_status": "starter",
+      "last_updated": "2026-05-11",
+      "notes_internal": "ПОЧАТКОВИЙ ЗАПИС. Потребує контакту з виробником (info@arton.com.ua, +380 (372) 55-74-98). Критично потрібно: архітектура системи 'Вектор' (петлі, адреси, мережа), I/O модулі та їх адресне споживання, прайс-лист на UA-ринку.",
+      "notes_strengths": [
+        "Українське виробництво (Чернівці)",
+        "ISO 9001:2015 з 2003 року",
+        "Аерозольне пожежогасіння — окрема сильна лінійка",
+        "Експорт у 30+ країн"
+      ],
+      "notes_weaknesses": [
+        "Обмежені публічні характеристики системи 'Вектор'",
+        "Хмара і мобільне — не передбачено",
+        "BMS-інтеграція не нативна",
+        "Часткова EN 54 (через болгарський Dedal)"
+      ],
+      "certifications": {
+        "EU_EN54": {
+          "status": "partial",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": "Dedal (Bulgaria)",
+          "valid_until": null
+        },
+        "UA_DSTU_EN54": {
+          "status": "full",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "UK_BS_LPCB": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "US_UL_FM": {
+          "status": "none",
+          "notes": null,
+          "certified_parts": [],
+          "certification_body": null,
+          "valid_until": null
+        },
+        "iso_9001": "ISO 9001:2015"
+      },
+      "features": {
+        "false_alarm_level": "basic",
+        "false_alarm_technologies": [],
+        "cloud_monitoring": {
+          "available": false,
+          "platform_name": null,
+          "notes": null
+        },
+        "mobile_app": {
+          "available": false,
+          "platforms": [],
+          "notes": null
+        },
+        "bms_integration": {
+          "bacnet": "none",
+          "modbus_rtu": "gateway",
+          "modbus_tcp": "none",
+          "opc_ua": "none",
+          "knx": "none"
+        },
+        "voice_alarm": "none",
+        "wireless_extension": false,
+        "redundancy": {
+          "panel_controller": false,
+          "network": false,
+          "loop": false,
+          "notes": null
+        }
+      },
+      "panels": [],
+      "detectors": [],
+      "io_modules": [],
+      "sounders": [],
+      "manual_call_points": [],
+      "power_supplies": []
+    }
+  ]
+}
