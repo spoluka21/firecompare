@@ -35,25 +35,36 @@ from schemas.object_state import (
 # ═══════════════════════════════════════════════════════════════════
 
 
+# Кожна вісь: значення → (Enum-значення, опис UA, опис EN)
 AXIS_HORIZON = {
-    "S": (LifetimeHorizon.SHORT_3_5, "короткий горизонт (3-5 років)"),
-    "L": (LifetimeHorizon.LONG_15_20, "довгий горизонт (15-20 років)"),
+    "S": (LifetimeHorizon.SHORT_3_5, "короткий горизонт (3-5 років)", 
+          "short horizon (3-5 years)"),
+    "L": (LifetimeHorizon.LONG_15_20, "довгий горизонт (15-20 років)", 
+          "long horizon (15-20 years)"),
 }
 
 AXIS_FALSE_ALARM = {
-    "S": (FalseAlarmRequirement.STANDARD, "стандартний захист від хибних"),
-    "P": (FalseAlarmRequirement.PREMIUM, "преміум захист від хибних"),
+    "S": (FalseAlarmRequirement.STANDARD, "стандартний захист від хибних", 
+          "standard false alarm protection"),
+    "P": (FalseAlarmRequirement.PREMIUM, "преміум захист від хибних", 
+          "premium false alarm protection"),
 }
 
 AXIS_FINANCING = {
-    "N": (TriState.NO, "без бюджетних обмежень"),
-    "Y": (TriState.YES, "з бюджетними обмеженнями"),
+    "N": (TriState.NO, "без бюджетних обмежень", "no budget constraints"),
+    "Y": (TriState.YES, "з бюджетними обмеженнями", "with budget constraints"),
 }
 
 AXIS_MOBILE_CLOUD = {
-    "N": ((TriState.NO, TriState.NO), "без мобільного/хмари"),
-    "Y": ((TriState.YES, TriState.YES), "з мобільним і хмарою"),
+    "N": ((TriState.NO, TriState.NO), "без мобільного/хмари", "without mobile/cloud"),
+    "Y": ((TriState.YES, TriState.YES), "з мобільним і хмарою", "with mobile and cloud"),
 }
+
+
+def _axis_desc(axis_dict: dict, key: str, lang: str = "ua") -> str:
+    """Повертає опис значення осі мовою lang"""
+    entry = axis_dict[key]
+    return entry[2] if lang == "en" else entry[1]
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -155,13 +166,14 @@ def _apply_axis_values_to_state(
 def _build_scenario_description(
     horizon_key: str, false_alarm_key: str,
     financing_key: str, mobile_cloud_key: str,
+    lang: str = "ua",
 ) -> str:
     """Людиночитаний опис сценарію"""
     parts = [
-        AXIS_HORIZON[horizon_key][1],
-        AXIS_FALSE_ALARM[false_alarm_key][1],
-        AXIS_FINANCING[financing_key][1],
-        AXIS_MOBILE_CLOUD[mobile_cloud_key][1],
+        _axis_desc(AXIS_HORIZON, horizon_key, lang),
+        _axis_desc(AXIS_FALSE_ALARM, false_alarm_key, lang),
+        _axis_desc(AXIS_FINANCING, financing_key, lang),
+        _axis_desc(AXIS_MOBILE_CLOUD, mobile_cloud_key, lang),
     ]
     return " + ".join(parts)
 
@@ -174,9 +186,12 @@ def _build_scenario_description(
 def run_mode2_analysis(
     base_state: ObjectState,
     catalog: Catalog,
+    language: str = "ua",
 ) -> Mode2Result:
     """
     Прогоняє 16 сценаріїв і формує аналітичний звіт.
+    
+    language: "ua" або "en" — мова описів і спостережень.
     """
     result = Mode2Result(
         base_session_id=base_state.session_id,
@@ -189,7 +204,7 @@ def run_mode2_analysis(
         scenario_idx += 1
         scenario_id = f"S{scenario_idx:02d}"
         scenario_code = f"h({h})_fa({fa})_fin({fin})_mc({mc})"
-        description = _build_scenario_description(h, fa, fin, mc)
+        description = _build_scenario_description(h, fa, fin, mc, lang=language)
         
         # Створюємо варіант стейту
         variant_state = _apply_axis_values_to_state(base_state, h, fa, fin, mc)
@@ -203,10 +218,10 @@ def run_mode2_analysis(
                 scenario_id=scenario_id,
                 scenario_code=scenario_code,
                 scenario_description=description + f" — ПОМИЛКА: {str(e)[:50]}",
-                horizon=AXIS_HORIZON[h][1],
-                false_alarm=AXIS_FALSE_ALARM[fa][1],
-                financing=AXIS_FINANCING[fin][1],
-                mobile_cloud=AXIS_MOBILE_CLOUD[mc][1],
+                horizon=_axis_desc(AXIS_HORIZON, h, language),
+                false_alarm=_axis_desc(AXIS_FALSE_ALARM, fa, language),
+                financing=_axis_desc(AXIS_FINANCING, fin, language),
+                mobile_cloud=_axis_desc(AXIS_MOBILE_CLOUD, mc, language),
             )
             result.scenarios.append(scen_result)
             continue
@@ -216,10 +231,10 @@ def run_mode2_analysis(
             scenario_id=scenario_id,
             scenario_code=scenario_code,
             scenario_description=description,
-            horizon=AXIS_HORIZON[h][1],
-            false_alarm=AXIS_FALSE_ALARM[fa][1],
-            financing=AXIS_FINANCING[fin][1],
-            mobile_cloud=AXIS_MOBILE_CLOUD[mc][1],
+            horizon=_axis_desc(AXIS_HORIZON, h, language),
+            false_alarm=_axis_desc(AXIS_FALSE_ALARM, fa, language),
+            financing=_axis_desc(AXIS_FINANCING, fin, language),
+            mobile_cloud=_axis_desc(AXIS_MOBILE_CLOUD, mc, language),
         )
         
         # Виявляємо переможця і будуємо рейтинг
@@ -232,18 +247,28 @@ def run_mode2_analysis(
         if eligible:
             eligible.sort(key=lambda r: r.scores.overall_score, reverse=True)
             
+            # Допоміжна мапа catalog id → локалізована назва
+            mfr_name_map = {}
+            for cm in catalog.manufacturers:
+                mfr_name_map[cm.manufacturer_id] = (
+                    cm.name_en if language == "en" else cm.name_ua
+                )
+            
             for idx, mfr_r in enumerate(eligible, start=1):
+                display_name = mfr_name_map.get(mfr_r.manufacturer_id, mfr_r.manufacturer_name)
                 scen_result.rankings.append(ScenarioRanking(
                     rank=idx,
                     manufacturer_id=mfr_r.manufacturer_id,
-                    manufacturer_name=mfr_r.manufacturer_name,
+                    manufacturer_name=display_name,
                     overall_score=mfr_r.scores.overall_score,
                     capex_uah=mfr_r.capex_uah,
                 ))
             
             winner = eligible[0]
             scen_result.winner_id = winner.manufacturer_id
-            scen_result.winner_name = winner.manufacturer_name
+            scen_result.winner_name = mfr_name_map.get(
+                winner.manufacturer_id, winner.manufacturer_name
+            )
             scen_result.winner_overall = winner.scores.overall_score
             scen_result.applied_weights = winner.scores.applied_weights
         
@@ -252,13 +277,40 @@ def run_mode2_analysis(
     result.total_scenarios = len(result.scenarios)
     
     # ─── АНАЛІТИКА ───
-    _build_analytics(result)
+    _build_analytics(result, language)
     
     return result
 
 
-def _build_analytics(result: Mode2Result) -> None:
+def _build_analytics(result: Mode2Result, lang: str = "ua") -> None:
     """Формує аналітичні висновки з 16 сценаріїв"""
+    
+    # Локалізовані фрази
+    TEXTS = {
+        "ua": {
+            "wins_in": "перемагає у",
+            "scenarios": "сценаріях",
+            "cofem_premium": "Cofem домінує при преміум-захисті від хибних",
+            "cofem_long": "Cofem домінує при довгому горизонті експлуатації",
+            "budget_winner": "При бюджетних обмеженнях найчастіше перемагає",
+            "of_scenarios": "сценаріїв",
+            "won": "переміг",
+            "cofem_position": "Cofem на",
+            "position_suffix": "-й позиції",
+        },
+        "en": {
+            "wins_in": "wins in",
+            "scenarios": "scenarios",
+            "cofem_premium": "Cofem dominates with premium false-alarm protection",
+            "cofem_long": "Cofem dominates with long lifetime horizon",
+            "budget_winner": "Under budget constraints, the most frequent winner is",
+            "of_scenarios": "scenarios",
+            "won": "won by",
+            "cofem_position": "Cofem at position",
+            "position_suffix": "",
+        },
+    }
+    T = TEXTS.get(lang, TEXTS["ua"])
     
     # 1. Розподіл перемог
     distribution: dict[str, int] = {}
@@ -285,8 +337,8 @@ def _build_analytics(result: Mode2Result) -> None:
             cofem_position = cofem_top.rank if cofem_top else "n/a"
             cofem_loses_in.append(
                 f"[{scen.scenario_id}] {scen.scenario_description} "
-                f"→ переміг {scen.winner_name} ({scen.winner_overall}), "
-                f"Cofem на {cofem_position}-й позиції"
+                f"→ {T['won']} {scen.winner_name} ({scen.winner_overall}), "
+                f"{T['cofem_position']} {cofem_position}{T['position_suffix']}"
             )
     
     result.winner_distribution = distribution
@@ -301,23 +353,20 @@ def _build_analytics(result: Mode2Result) -> None:
     for mfr_id, count in sorted(distribution.items(), key=lambda x: -x[1]):
         pct = round(count / total * 100, 0)
         observations.append(
-            f"{mfr_id.capitalize()} перемагає у {count}/{total} сценаріях ({pct}%)"
+            f"{mfr_id.capitalize()} {T['wins_in']} {count}/{total} {T['scenarios']} ({pct}%)"
         )
     
     # Конкретні паттерни виграшу Cofem
     cofem_count = distribution.get("cofem", 0)
     if cofem_count > 0:
-        # Аналіз — у яких комбінаціях вісей Cofem виграє?
-        cofem_scens = [s for s in result.scenarios if s.winner_id == "cofem"]
-        
         # Перевіримо: завжди коли premium false_alarm?
         premium_fa_scens = [s for s in result.scenarios if "P" in s.scenario_code.split("fa(")[1][0]]
         cofem_in_premium = sum(1 for s in premium_fa_scens if s.winner_id == "cofem")
         
         if cofem_in_premium >= len(premium_fa_scens) * 0.75:
             observations.append(
-                f"Cofem домінує при преміум-захисті від хибних "
-                f"({cofem_in_premium}/{len(premium_fa_scens)} сценаріїв)"
+                f"{T['cofem_premium']} "
+                f"({cofem_in_premium}/{len(premium_fa_scens)} {T['of_scenarios']})"
             )
         
         # Перевіримо горизонт
@@ -325,8 +374,8 @@ def _build_analytics(result: Mode2Result) -> None:
         cofem_in_long = sum(1 for s in long_scens if s.winner_id == "cofem")
         if cofem_in_long >= len(long_scens) * 0.75:
             observations.append(
-                f"Cofem домінує при довгому горизонті експлуатації "
-                f"({cofem_in_long}/{len(long_scens)} сценаріїв)"
+                f"{T['cofem_long']} "
+                f"({cofem_in_long}/{len(long_scens)} {T['of_scenarios']})"
             )
     
     # Хто переможець у бюджетних сценаріях
@@ -339,8 +388,8 @@ def _build_analytics(result: Mode2Result) -> None:
         top_fin = max(fin_winners.items(), key=lambda x: x[1]) if fin_winners else None
         if top_fin:
             observations.append(
-                f"При бюджетних обмеженнях найчастіше перемагає {top_fin[0]} "
-                f"({top_fin[1]}/{len(fin_scens)} сценаріїв)"
+                f"{T['budget_winner']} {top_fin[0]} "
+                f"({top_fin[1]}/{len(fin_scens)} {T['of_scenarios']})"
             )
     
     result.observations = observations

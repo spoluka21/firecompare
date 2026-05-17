@@ -65,7 +65,7 @@ from build_catalog import CATALOG
 from tests.fixtures.zamkova_phase_2 import (
     ZAMKOVA_PHASE_2, ZAMKOVA_PHASE_2_PREMIUM, ZAMKOVA_PHASE_2_SIMPLE,
 )
-from ui.i18n import t
+from ui.i18n import t, mfr_name, get_lang
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -141,7 +141,7 @@ with st.sidebar:
     selected_mfr_ids = []
     for mfr in all_mfrs:
         default = mfr.manufacturer_id in base_state.comparison_set
-        if st.checkbox(mfr.name_ua, value=default, key=f"mfr_{mfr.manufacturer_id}"):
+        if st.checkbox(mfr_name(mfr), value=default, key=f"mfr_{mfr.manufacturer_id}"):
             selected_mfr_ids.append(mfr.manufacturer_id)
     
     st.markdown("---")
@@ -150,6 +150,14 @@ with st.sidebar:
 
 state = base_state.model_copy(deep=True)
 state.comparison_set = selected_mfr_ids
+
+# Локалізована мапа назв виробників (для UA/EN)
+MFR_DISPLAY = {m.manufacturer_id: mfr_name(m) for m in CATALOG.manufacturers}
+
+
+def display_name(mfr_id: str, fallback: str = "") -> str:
+    """Повертає локалізовану назву виробника за id"""
+    return MFR_DISPLAY.get(mfr_id, fallback)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -216,7 +224,7 @@ with tab1:
             badge = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else ""
             rows.append({
                 "": badge,
-                t("col_manufacturer"): row["manufacturer_name"],
+                t("col_manufacturer"): display_name(row["manufacturer_id"], row["manufacturer_name"]),
                 t("col_panels"): row.get("panel_count", 1),
                 t("col_addresses"): row["addresses_used"],
                 t("col_arch_eff"): f"{row['architectural_efficiency_pct']:.1f}",
@@ -254,7 +262,8 @@ with tab1:
         with col_left:
             st.markdown(f"#### {t('chart_overall')}")
             chart_data = pd.DataFrame({
-                t("col_manufacturer"): [r["manufacturer_name"] for r in result.comparison_table],
+                t("col_manufacturer"): [display_name(r["manufacturer_id"], r["manufacturer_name"]) 
+                                         for r in result.comparison_table],
                 "Overall": [r.get("overall_score", 0) for r in result.comparison_table],
             }).set_index(t("col_manufacturer"))
             st.bar_chart(chart_data, color="#2E75B6", height=300)
@@ -262,7 +271,8 @@ with tab1:
         with col_right:
             st.markdown(f"#### {t('chart_capex')}")
             chart_data = pd.DataFrame({
-                t("col_manufacturer"): [r["manufacturer_name"] for r in result.comparison_table],
+                t("col_manufacturer"): [display_name(r["manufacturer_id"], r["manufacturer_name"]) 
+                                         for r in result.comparison_table],
                 "CAPEX": [r["capex_uah"] for r in result.comparison_table],
             }).set_index(t("col_manufacturer"))
             st.bar_chart(chart_data, color="#FFA500", height=300)
@@ -270,11 +280,17 @@ with tab1:
         st.markdown("---")
         st.markdown(f"#### {t('details_header')}")
         
-        feasible_names = [r["manufacturer_name"] for r in result.comparison_table]
+        feasible_names = [(r["manufacturer_id"], display_name(r["manufacturer_id"], r["manufacturer_name"])) 
+                          for r in result.comparison_table]
         if feasible_names:
-            selected_name = st.selectbox(t("select_manufacturer"), feasible_names)
+            selected_label = st.selectbox(
+                t("select_manufacturer"), 
+                [n[1] for n in feasible_names]
+            )
+            # Знайти manufacturer_id за назвою
+            selected_id = next((n[0] for n in feasible_names if n[1] == selected_label), None)
             selected_mfr_result = next(
-                (r for r in result.manufacturer_results if r.manufacturer_name == selected_name),
+                (r for r in result.manufacturer_results if r.manufacturer_id == selected_id),
                 None,
             )
             
@@ -312,7 +328,7 @@ with tab2:
     if run_mode2 or "mode2_result" in st.session_state:
         if run_mode2:
             with st.spinner(t("mode2_spinner")):
-                mode2_result = run_mode2_analysis(state, CATALOG)
+                mode2_result = run_mode2_analysis(state, CATALOG, language=get_lang())
                 st.session_state["mode2_result"] = mode2_result
         else:
             mode2_result = st.session_state["mode2_result"]
@@ -324,20 +340,14 @@ with tab2:
             for mfr_id, count in sorted(mode2_result.winner_distribution.items(), 
                                          key=lambda x: -x[1]):
                 pct = round(count / mode2_result.total_scenarios * 100, 0)
-                mfr_name = next(
-                    (m.name_ua for m in CATALOG.manufacturers
-                     if m.manufacturer_id == mfr_id), mfr_id,
-                )
-                st.metric(mfr_name, f"{count} / {mode2_result.total_scenarios}", f"{pct}%")
+                st.metric(display_name(mfr_id, mfr_id), 
+                          f"{count} / {mode2_result.total_scenarios}", f"{pct}%")
         
         with col2:
             import pandas as pd
             data = pd.DataFrame({
-                t("col_manufacturer"): [
-                    next((m.name_ua for m in CATALOG.manufacturers 
-                          if m.manufacturer_id == mfr_id), mfr_id)
-                    for mfr_id in mode2_result.winner_distribution.keys()
-                ],
+                t("col_manufacturer"): [display_name(mfr_id, mfr_id) 
+                                         for mfr_id in mode2_result.winner_distribution.keys()],
                 "Wins": list(mode2_result.winner_distribution.values()),
             }).set_index(t("col_manufacturer"))
             st.bar_chart(data, color="#28A745")
@@ -381,7 +391,7 @@ with tab3:
     st.markdown(f"### {t('mode3_header')}")
     st.caption(t("mode3_caption"))
     
-    feasible_names = {r["manufacturer_id"]: r["manufacturer_name"] 
+    feasible_names = {r["manufacturer_id"]: display_name(r["manufacturer_id"], r["manufacturer_name"]) 
                      for r in result.comparison_table}
     
     if not feasible_names:
@@ -400,6 +410,7 @@ with tab3:
                     target_manufacturer_id=target_id,
                     catalog=CATALOG,
                     state=state,
+                    language=get_lang(),
                 )
                 
                 if not memo:

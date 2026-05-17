@@ -251,3 +251,11 @@ def t(key: str) -> str:
         return key
     lang = get_lang()
     return entry.get(lang, entry.get("ua", key))
+
+
+def mfr_name(manufacturer) -> str:
+    """Повертає назву виробника відповідно до обраної мови інтерфейсу."""
+    lang = get_lang()
+    if lang == "en":
+        return manufacturer.name_en or manufacturer.name_ua
+    return manufacturer.name_ua
