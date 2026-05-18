@@ -397,6 +397,23 @@ class Manufacturer(BaseModel):
     certifications: Certifications
     features: Features
     
+    # ── Maintenance-специфічні параметри (для розрахунку ТО) ──
+    # Знижка часу планового ТО за рахунок технології (наприклад, лабіринтні корпуси не треба чистити)
+    maintenance_time_modifier: float = Field(
+        default=1.0, ge=0.5, le=1.5,
+        description="0.8 = 20% знижка часу ТО (Cofem labyrinth); 1.0 = стандарт; 1.2 = +20% (старі технології)"
+    )
+    # Середня вартість заміни одного компонента при пошкодженні
+    avg_part_replacement_cost_uah: float = Field(
+        default=800.0, ge=0,
+        description="Середня вартість заміни 1 детектора/модуля при пошкодженні (грн)"
+    )
+    # Швидкість реакції — модифікатор. 1.0 = стандарт. 1.2 = далі поставляється з ЄС → потенційно довша реакція
+    service_response_modifier: float = Field(
+        default=1.0, ge=0.8, le=1.5,
+        description="1.0 = UA-склад; 1.2 = регіональний дистриб'ютор; 1.5 = тільки із ЄС"
+    )
+    
     # Списки компонентів
     panels: list[Panel] = Field(default_factory=list)
     detectors: list[Detector] = Field(default_factory=list)

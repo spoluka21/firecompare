@@ -151,11 +151,24 @@ with st.sidebar:
             selected_mfr_ids.append(mfr.manufacturer_id)
     
     st.markdown("---")
+    
+    # ── Maintenance параметри ──
+    from ui.maintenance_ui import render_maintenance_sidebar_params
+    mnt_params = render_maintenance_sidebar_params(
+        default_area=base_state.object.total_area_m2,
+        default_distance=5.0,
+    )
+    
+    st.markdown("---")
     run_button = st.button(t("calculate_btn"), type="primary", use_container_width=True)
 
 
 state = base_state.model_copy(deep=True)
 state.comparison_set = selected_mfr_ids
+
+# Якщо обрано рахувати ТО — додаємо в state
+if mnt_params is not None:
+    state.maintenance_params = mnt_params.model_dump()
 
 # Локалізована мапа назв виробників (для UA/EN)
 MFR_DISPLAY = {m.manufacturer_id: mfr_name(m) for m in CATALOG.manufacturers}
@@ -170,7 +183,9 @@ def display_name(mfr_id: str, fallback: str = "") -> str:
 # ВКЛАДКИ
 # ═══════════════════════════════════════════════════════════════════
 
-tab1, tab2, tab3 = st.tabs([t("tab1_label"), t("tab2_label"), t("tab3_label")])
+tab1, tab2, tab3, tab4 = st.tabs([
+    t("tab1_label"), t("tab2_label"), t("tab3_label"), t("tab4_label"),
+])
 
 if run_button:
     with st.spinner(t("calculating_spinner")):
@@ -181,6 +196,7 @@ if run_button:
         if "mode2_result" in st.session_state:
             del st.session_state["mode2_result"]
 
+# Якщо ще не було розрахунку — у tab 1-3 показуємо info, але Mode 4 доступний завжди
 if "last_result" not in st.session_state:
     with tab1:
         st.info(t("configure_and_run"))
@@ -188,6 +204,15 @@ if "last_result" not in st.session_state:
         st.info(t("run_first"))
     with tab3:
         st.info(t("run_first"))
+    # Tab 4 — standalone-калькулятор завжди працює
+    with tab4:
+        from ui.maintenance_ui import render_mode4_tab
+        render_mode4_tab(
+            result=None,
+            state=state,
+            catalog=CATALOG,
+            display_name_func=display_name,
+        )
     st.stop()
 
 result = st.session_state["last_result"]
@@ -226,9 +251,10 @@ with tab1:
         
         import pandas as pd
         rows = []
+        has_maint = any(r.get("maintenance_month_uah") for r in result.comparison_table)
         for idx, row in enumerate(result.comparison_table, 1):
             badge = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉" if idx == 3 else ""
-            rows.append({
+            row_data = {
                 "": badge,
                 t("col_manufacturer"): display_name(row["manufacturer_id"], row["manufacturer_name"]),
                 t("col_panels"): row.get("panel_count", 1),
@@ -241,7 +267,11 @@ with tab1:
                 "L4": f"{row.get('layer_4_operational_score', '—')}",
                 "L5": f"{row.get('layer_5_tco_score', '—')}",
                 "OVERALL": f"{row.get('overall_score', '—')}",
-            })
+            }
+            if has_maint:
+                mnt_m = row.get("maintenance_month_uah")
+                row_data[t("col_maintenance_month")] = f"{mnt_m:,.0f}" if mnt_m else "—"
+            rows.append(row_data)
         df = pd.DataFrame(rows)
         st.dataframe(df, use_container_width=True, hide_index=True)
         
@@ -459,3 +489,17 @@ with tab3:
                                     st.markdown(f"• {bullet}")
                     except Exception as e:
                         st.error(f"{t('memo_export_error')}: {e}")
+
+
+# ═══════════════════════════════════════════════════════════════════
+# TAB 4: MAINTENANCE
+# ═══════════════════════════════════════════════════════════════════
+
+with tab4:
+    from ui.maintenance_ui import render_mode4_tab
+    render_mode4_tab(
+        result=result if "last_result" in st.session_state else None,
+        state=state,
+        catalog=CATALOG,
+        display_name_func=display_name,
+    )

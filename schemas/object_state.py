@@ -362,3 +362,14 @@ class ObjectState(BaseModel):
     # НОВЕ: принципова архітектура системи (Блок E)
     # Якщо None — простий режим (1 ППКП на об'єкт, як у попередній версії)
     npa_architecture: Optional[NPAArchitecture] = None
+    
+    # НОВЕ: параметри для розрахунку ТО (опційно)
+    # Якщо None — pipeline не обчислює ТО для виробників
+    maintenance_params: Optional[dict] = Field(
+        default=None,
+        description=(
+            "Параметри ТО (dict-серіалізація MaintenanceParams). "
+            "Якщо вказано — pipeline автоматично рахує ТО для кожного виробника. "
+            "Використовуємо dict (а не клас), щоб уникнути циклічного імпорту з engine."
+        )
+    )

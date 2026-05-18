@@ -63,6 +63,12 @@ OMEGA = Manufacturer(
         wireless_extension=False,
         redundancy=Redundancy(network=True, notes="Резервована шина RS-485 ×2"),
     ),
+    
+    # Maintenance: український виробник, BASIC рівень — більше хибних і ТО
+    maintenance_time_modifier=1.1,  # +10% — частіше очищення (нема алгоритмічних компенсацій)
+    avg_part_replacement_cost_uah=400.0,  # детектори Омеги дешевші
+    service_response_modifier=0.9,  # локальний склад, швидка реакція
+    
     panels=[
         Panel(panel_id="omega_pu_p_4", model_name="ПУ-П 4 (4 кільця)",
               panel_type=PanelType.MODULAR, max_loops=4, devices_per_loop=60, max_total_devices=240,

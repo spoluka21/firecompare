@@ -60,6 +60,12 @@ VARTA = Manufacturer(
         wireless_extension=False,
         redundancy=Redundancy(),
     ),
+    
+    # Maintenance: український виробник, BASIC рівень
+    maintenance_time_modifier=1.1,  # +10% — стандартні детектори, очищення
+    avg_part_replacement_cost_uah=450.0,
+    service_response_modifier=0.9,  # локальний склад
+    
     panels=[
         Panel(panel_id="varta_adres", model_name="Варта-Адрес",
               panel_type=PanelType.MODULAR, max_loops=15, devices_per_loop=127, max_total_devices=1905,

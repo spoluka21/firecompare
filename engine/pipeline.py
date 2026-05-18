@@ -52,6 +52,9 @@ class ManufacturerResult(BaseModel):
     # Скоринг
     scores: Optional[ManufacturerScores] = None
     
+    # Розрахунок ТО (опційно, якщо в state є maintenance_params)
+    maintenance: Optional[dict] = None  # MaintenanceResult.model_dump()
+    
     # Зведення для UI
     capex_uah: float = 0.0
     addresses_used: int = 0
@@ -230,6 +233,35 @@ def run_calculation(
                 mfr_result.scores = scores[mfr_result.manufacturer_id]
     
     # ─────────────────────────────────────────────────────────
+    # Step 5: Maintenance calculation (якщо в state є maintenance_params)
+    # ─────────────────────────────────────────────────────────
+    if state.maintenance_params is not None:
+        from engine.maintenance_calculator import (
+            calculate_maintenance, MaintenanceParams,
+        )
+        try:
+            mnt_params = MaintenanceParams(**state.maintenance_params)
+        except Exception as e:
+            result.warnings.append(f"Не вдалося розпарсити maintenance_params: {e}")
+            mnt_params = None
+        
+        if mnt_params is not None:
+            mfr_map_by_id = {m.manufacturer_id: m for m in catalog.manufacturers}
+            for mfr_result in result.manufacturer_results:
+                if mfr_result.excluded:
+                    continue
+                mfr_obj = mfr_map_by_id.get(mfr_result.manufacturer_id)
+                if mfr_obj is None:
+                    continue
+                try:
+                    mnt_result = calculate_maintenance(mnt_params, mfr_obj)
+                    mfr_result.maintenance = mnt_result.model_dump()
+                except Exception as e:
+                    result.warnings.append(
+                        f"Помилка розрахунку ТО для {mfr_result.manufacturer_name}: {e}"
+                    )
+    
+    # ─────────────────────────────────────────────────────────
     # Зведення для UI — порівняльна таблиця
     # ─────────────────────────────────────────────────────────
     # Сортуємо за overall_score (спадання), якщо є; інакше за CAPEX (зростання)
@@ -264,6 +296,13 @@ def run_calculation(
                 row["layer_5_tco_score"] = r.scores.layer_5_tco.score
             if r.scores.overall_score is not None:
                 row["overall_score"] = r.scores.overall_score
+        
+        # Maintenance — додаткова колонка для UI
+        if r.maintenance:
+            bd = r.maintenance.get("breakdown", {})
+            row["maintenance_month_uah"] = bd.get("price_final_month")
+            row["maintenance_year_uah"] = bd.get("price_final_year")
+        
         result.comparison_table.append(row)
     
     # Виключені виробники як ноти

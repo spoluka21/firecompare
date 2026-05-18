@@ -236,6 +236,139 @@ TRANSLATIONS = {
         "ua": "Виконую розрахунок...",
         "en": "Running calculation...",
     },
+    
+    # ── Maintenance: column in Mode 1 ──
+    "col_maintenance_month": {"ua": "ТО/міс (₴)", "en": "Maint./mo (UAH)"},
+    "col_maintenance_year": {"ua": "ТО/рік (₴)", "en": "Maint./yr (UAH)"},
+    
+    # ── Maintenance: parameters in sidebar ──
+    "maintenance_section": {"ua": "🔧 Параметри ТО", "en": "🔧 Maintenance params"},
+    "maintenance_enable": {
+        "ua": "Розрахувати вартість ТО",
+        "en": "Calculate maintenance cost",
+    },
+    "mnt_distance": {"ua": "Відстань до об'єкта (км)", "en": "Distance to object (km)"},
+    "mnt_n_damages": {"ua": "Пошкоджень/міс", "en": "Damages/month"},
+    "mnt_composition": {"ua": "Склад СПЗ", "en": "FAS composition"},
+    "mnt_has_extinguish": {"ua": "Пожежогасіння", "en": "Fire extinguishing"},
+    "mnt_has_smoke_vent": {"ua": "Димовидалення", "en": "Smoke ventilation"},
+    "mnt_has_valves": {"ua": "Керування клапанами", "en": "Valves control"},
+    "mnt_has_engineering": {
+        "ua": "Інженерні системи (ліфти/ворота)",
+        "en": "Engineering systems (lifts/gates)",
+    },
+    "mnt_has_monitoring_subcontract": {
+        "ua": "Пультове спостереження (підряд)",
+        "en": "Monitoring (subcontract)",
+    },
+    "mnt_subcontract_cost": {
+        "ua": "Вартість підряду (₴/міс)",
+        "en": "Subcontract cost (UAH/mo)",
+    },
+    
+    # ── Maintenance tab ──
+    "tab4_label": {"ua": "🔧 Mode 4: ТО (калькулятор)", "en": "🔧 Mode 4: Maintenance"},
+    "mnt_header": {
+        "ua": "🔧 Розрахунок вартості ТО",
+        "en": "🔧 Maintenance cost calculator",
+    },
+    "mnt_caption": {
+        "ua": (
+            "Калькулятор вартості щомісячного технічного обслуговування СПЗ. "
+            "Можна використовувати окремо або разом з порівнянням виробників (Mode 1)."
+        ),
+        "en": (
+            "Monthly maintenance cost calculator for fire alarm systems. "
+            "Can be used standalone or integrated with manufacturer comparison (Mode 1)."
+        ),
+    },
+    "mnt_show_breakdown": {
+        "ua": "Розрахунок для виробників",
+        "en": "Breakdown by manufacturer",
+    },
+    "mnt_breakdown_caption": {
+        "ua": (
+            "Деталізація розрахунку ТО для кожного виробника з comparison-set. "
+            "Cofem зазвичай має нижчу вартість ТО завдяки PREMIUM-рівню захисту від хибних "
+            "та лабіринтним корпусам, які не потребують регулярного очищення."
+        ),
+        "en": (
+            "Detailed maintenance cost breakdown for each manufacturer in the comparison set. "
+            "Cofem typically has lower maintenance costs due to PREMIUM-level false alarm "
+            "protection and labyrinth housings that don't require regular cleaning."
+        ),
+    },
+    "mnt_standalone_header": {
+        "ua": "Самостійний розрахунок (без виробника)",
+        "en": "Standalone calculation (no manufacturer)",
+    },
+    "mnt_standalone_caption": {
+        "ua": (
+            "Розрахунок для гіпотетичного об'єкта без прив'язки до конкретного виробника. "
+            "Використовуються середні параметри."
+        ),
+        "en": (
+            "Calculation for a hypothetical object without binding to a specific "
+            "manufacturer. Average parameters are used."
+        ),
+    },
+    "mnt_time_table_header": {"ua": "Витрати часу", "en": "Time costs"},
+    "mnt_cost_table_header": {"ua": "Розрахунок собівартості", "en": "Cost breakdown"},
+    "mnt_price_table_header": {"ua": "Розрахунок ціни", "en": "Price calculation"},
+    "mnt_summary_month": {"ua": "За місяць", "en": "Per month"},
+    "mnt_summary_year": {"ua": "За рік", "en": "Per year"},
+    "mnt_export_btn": {
+        "ua": "📄 Згенерувати DOCX-меморандум",
+        "en": "📄 Generate DOCX memorandum",
+    },
+    "mnt_download_btn": {"ua": "⬇ Завантажити DOCX", "en": "⬇ Download DOCX"},
+    "mnt_strategic_discount": {
+        "ua": "Стратегічна знижка (%)",
+        "en": "Strategic discount (%)",
+    },
+    
+    # ── Row labels in tables ──
+    "mnt_row_t_planned": {
+        "ua": "Планове ТО (з урахуванням складності)",
+        "en": "Planned maintenance (with complexity factor)",
+    },
+    "mnt_row_t_travel_planned": {
+        "ua": "Дорога на планові візити",
+        "en": "Travel for planned visits",
+    },
+    "mnt_row_t_false": {
+        "ua": "Реагування на хибні (з дорогою)",
+        "en": "Response to false alarms (with travel)",
+    },
+    "mnt_row_t_damages": {
+        "ua": "Усунення пошкоджень (з дорогою)",
+        "en": "Damage repair (with travel)",
+    },
+    "mnt_row_t_total": {"ua": "РАЗОМ людино-годин на місяць", "en": "TOTAL man-hours per month"},
+    "mnt_row_cost_labor": {
+        "ua": "Оплата праці кваліфікованого виконавця (з податками)",
+        "en": "Qualified executor labor (with taxes)",
+    },
+    "mnt_row_cost_transport": {"ua": "Транспортні витрати", "en": "Transport costs"},
+    "mnt_row_cost_parts": {"ua": "Запчастини / витратні матеріали", "en": "Spare parts"},
+    "mnt_row_cost_admin": {"ua": "Адміністративні витрати", "en": "Administrative costs"},
+    "mnt_row_cost_own_total": {"ua": "СОБІВАРТІСТЬ ВЛАСНИХ РОБІТ", "en": "OWN WORK COST"},
+    "mnt_row_price_own": {
+        "ua": "Власні роботи (з націнкою 60%)",
+        "en": "Own work (with 60% markup)",
+    },
+    "mnt_row_subcontract": {
+        "ua": "Підрядне пультове спостереження (прохід)",
+        "en": "Subcontracted monitoring (pass-through)",
+    },
+    "mnt_row_calculated": {"ua": "РОЗРАХУНКОВА ЦІНА", "en": "CALCULATED PRICE"},
+    "mnt_row_discount": {"ua": "Стратегічна знижка", "en": "Strategic discount"},
+    "mnt_row_final": {"ua": "ЦІНА ДЛЯ КЛІЄНТА", "en": "PRICE FOR CLIENT"},
+    "mnt_col_item": {"ua": "Стаття", "en": "Item"},
+    "mnt_col_formula": {"ua": "Формула / Обчислення", "en": "Formula / Calculation"},
+    "mnt_col_value": {"ua": "Значення", "en": "Value"},
+    "mnt_col_hours": {"ua": "Годин", "en": "Hours"},
+    "mnt_col_uah": {"ua": "Сума, ₴", "en": "Amount, UAH"},
 }
 
 

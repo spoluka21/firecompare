@@ -59,6 +59,12 @@ TIRAS = Manufacturer(
         wireless_extension=False,
         redundancy=Redundancy(),
     ),
+    
+    # Maintenance: український виробник, локальний склад, швидка реакція
+    maintenance_time_modifier=1.0,  # стандарт
+    avg_part_replacement_cost_uah=500.0,  # детектор Tiras ~500 грн
+    service_response_modifier=0.9,  # завжди в наявності, швидка реакція
+    
     panels=[
         Panel(panel_id="tiras_prime_a", model_name="PRIME A (2 петлі)",
               panel_type=PanelType.MODULAR, max_loops=2, devices_per_loop=250, max_total_devices=500,

@@ -94,6 +94,11 @@ COFEM = Manufacturer(
         wireless_extension=False,
         redundancy=Redundancy(),
     ),
+    
+    # Maintenance: лабіринтні корпуси A50 — не потребують очищення
+    maintenance_time_modifier=0.8,  # −20% на регламентне очищення
+    avg_part_replacement_cost_uah=1200.0,  # детектор ~1200 грн
+    service_response_modifier=1.15,  # запчастини інколи із ЄС
     panels=[
         Panel(panel_id="cofem_rubi", model_name="Rubí (1 шлейф)",
               panel_type=PanelType.COMPACT, max_loops=1, devices_per_loop=64, max_total_devices=64,
