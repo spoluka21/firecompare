@@ -369,6 +369,64 @@ TRANSLATIONS = {
     "mnt_col_value": {"ua": "Значення", "en": "Value"},
     "mnt_col_hours": {"ua": "Годин", "en": "Hours"},
     "mnt_col_uah": {"ua": "Сума, ₴", "en": "Amount, UAH"},
+    
+    # ── Tab 5: AI Assistant ──
+    "tab5_label": {"ua": "🤖 AI помічник", "en": "🤖 AI assistant"},
+    "ai_header": {
+        "ua": "🤖 AI помічник для збору параметрів",
+        "en": "🤖 AI assistant for parameter collection",
+    },
+    "ai_caption": {
+        "ua": (
+            "Опишіть ваш об'єкт у вільній формі — AI задасть уточнюючі питання "
+            "і автоматично заповнить параметри для розрахунку."
+        ),
+        "en": (
+            "Describe your object in natural language — the AI will ask "
+            "clarifying questions and auto-fill parameters for calculation."
+        ),
+    },
+    "ai_no_key_warning": {
+        "ua": (
+            "⚠ API-ключ Anthropic не налаштовано. Зверніться до README, "
+            "розділ «AI-помічник: налаштування»."
+        ),
+        "en": (
+            "⚠ Anthropic API key not configured. See README, "
+            "section «AI Assistant: setup»."
+        ),
+    },
+    "ai_initial_message_ua": {
+        "ua": (
+            "Привіт! Я допоможу підібрати оптимальну систему пожежної "
+            "сигналізації для вашого об'єкта. Розкажіть, який саме об'єкт "
+            "ви плануєте обладнати?"
+        ),
+        "en": (
+            "Hi! I'll help you choose the right fire alarm system for your "
+            "object. What type of object are you equipping?"
+        ),
+    },
+    "ai_input_placeholder": {
+        "ua": "Опишіть ваш об'єкт або дайте відповідь...",
+        "en": "Describe your object or respond...",
+    },
+    "ai_thinking": {"ua": "Думаю...", "en": "Thinking..."},
+    "ai_reset_btn": {"ua": "🔄 Почати спочатку", "en": "🔄 Start over"},
+    "ai_collected_params": {
+        "ua": "📋 Зібрані параметри",
+        "en": "📋 Collected parameters",
+    },
+    "ai_run_calculation": {
+        "ua": "🚀 Запустити розрахунок",
+        "en": "🚀 Run calculation",
+    },
+    "ai_calc_done": {
+        "ua": "✅ Розрахунок виконано. Дивіться вкладки Mode 1, 2, 3, 4.",
+        "en": "✅ Calculation complete. See Mode 1, 2, 3, 4 tabs.",
+    },
+    "ai_error": {"ua": "Помилка", "en": "Error"},
+    "ai_token_usage": {"ua": "Токенів", "en": "Tokens"},
 }
 
 

@@ -110,5 +110,58 @@ streamlit run streamlit_app.py
 ## Версіонування
 
 - **v0.1** — каталог + Pydantic-схеми
-- **v0.2** — повний 5-шаровий scoring + NPA + Modes 1/2/3 + Streamlit UI (поточна)
-- **v0.3** (план) — AI-агент через Claude API, інтеграція в e-shop Cofem
+- **v0.2** — повний 5-шаровий scoring + NPA + Modes 1/2/3 + Streamlit UI
+- **v0.3** — Maintenance calculator (Mode 4) + двомовність
+- **v0.4** — AI Assistant (Mode 5) через Claude API (поточна)
+
+## AI-помічник: налаштування
+
+Mode 5 «AI помічник» працює через Anthropic Claude API. Для активації потрібен API-ключ.
+
+### Отримати API-ключ
+
+1. Зайти на [console.anthropic.com](https://console.anthropic.com/)
+2. Sign up (можна через Google-акаунт)
+3. Меню зліва → **API Keys** → **Create Key**
+4. Скопіювати ключ і зберегти (показується тільки один раз)
+5. Anthropic дає $5 безкоштовного кредиту для нових користувачів
+
+### Локальне налаштування
+
+Створіть файл `.streamlit/secrets.toml` у корені проекту:
+
+```toml
+ANTHROPIC_API_KEY = "sk-ant-api03-..."
+```
+
+Файл `secrets.toml` додано до `.gitignore` — він не потрапить у репозиторій.
+
+### Streamlit Cloud налаштування
+
+1. Зайти на свій додаток на [share.streamlit.io](https://share.streamlit.io)
+2. Manage app → **Settings** → **Secrets**
+3. Вставити рядок:
+   ```toml
+   ANTHROPIC_API_KEY = "sk-ant-api03-..."
+   ```
+4. Save
+
+Додаток автоматично перезапуститься з новим ключем.
+
+### Витрати
+
+Default модель — **Claude Haiku 4.5** (найдешевша, $0.80/1M input + $4/1M output токенів).
+
+Приблизні витрати:
+- Одна повна сесія діалогу (~25 обмінів): **$0.05–0.10**
+- Демо-сесія в Hannover (з тестами): **$1–2**
+- Реальне використання 50 об'єктів/міс: **~$5–10/міс**
+
+### Переключення на Sonnet
+
+У файлі `engine/ai_agent.py` знайти `DEFAULT_MODEL` і змінити на:
+```python
+DEFAULT_MODEL = "claude-sonnet-4-6"
+```
+Sonnet дає кращу якість діалогу, але у ~4 рази дорожчий.
+

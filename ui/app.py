@@ -183,8 +183,9 @@ def display_name(mfr_id: str, fallback: str = "") -> str:
 # ВКЛАДКИ
 # ═══════════════════════════════════════════════════════════════════
 
-tab1, tab2, tab3, tab4 = st.tabs([
-    t("tab1_label"), t("tab2_label"), t("tab3_label"), t("tab4_label"),
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    t("tab1_label"), t("tab2_label"), t("tab3_label"),
+    t("tab4_label"), t("tab5_label"),
 ])
 
 if run_button:
@@ -196,7 +197,7 @@ if run_button:
         if "mode2_result" in st.session_state:
             del st.session_state["mode2_result"]
 
-# Якщо ще не було розрахунку — у tab 1-3 показуємо info, але Mode 4 доступний завжди
+# Якщо ще не було розрахунку — у tab 1-3 показуємо info, але Mode 4 і Mode 5 доступні завжди
 if "last_result" not in st.session_state:
     with tab1:
         st.info(t("configure_and_run"))
@@ -213,6 +214,10 @@ if "last_result" not in st.session_state:
             catalog=CATALOG,
             display_name_func=display_name,
         )
+    # Tab 5 — AI-помічник завжди доступний
+    with tab5:
+        from ui.ai_agent_ui import render_ai_tab
+        render_ai_tab(catalog=CATALOG)
     st.stop()
 
 result = st.session_state["last_result"]
@@ -503,3 +508,12 @@ with tab4:
         catalog=CATALOG,
         display_name_func=display_name,
     )
+
+
+# ═══════════════════════════════════════════════════════════════════
+# TAB 5: AI ASSISTANT
+# ═══════════════════════════════════════════════════════════════════
+
+with tab5:
+    from ui.ai_agent_ui import render_ai_tab
+    render_ai_tab(catalog=CATALOG)
