@@ -124,7 +124,7 @@ def render_ai_tab(catalog):
         tot_in = st.session_state["ai_total_input_tokens"]
         tot_out = st.session_state["ai_total_output_tokens"]
         if tot_in + tot_out > 0:
-            cost_usd = (tot_in * 0.80 + tot_out * 4.00) / 1_000_000  # Haiku 4.5 rates
+            cost_usd = (tot_in * 3.00 + tot_out * 15.00) / 1_000_000  # Sonnet 4.6 rates
             st.caption(
                 f"{t('ai_token_usage')}: in={tot_in:,} | out={tot_out:,} | "
                 f"≈ ${cost_usd:.4f}"

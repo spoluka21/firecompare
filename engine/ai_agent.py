@@ -22,8 +22,11 @@ from pydantic import BaseModel, Field
 # КОНФІГ
 # ═══════════════════════════════════════════════════════════════════
 
-# Default — Haiku 4.5 (cheap, fast). Можна змінити на Sonnet для продакшену.
-DEFAULT_MODEL = "claude-haiku-4-5-20251001"
+# Default model для AI-агента.
+# Sonnet 4.6 — краще дотримання інструкцій (instruction following) і tool use.
+# Для економії можна повернути Haiku: "claude-haiku-4-5-20251001"
+# (Haiku дешевший ~4×, але слабше тримає точні формулювання промпту).
+DEFAULT_MODEL = "claude-sonnet-4-6"
 DEFAULT_MAX_TOKENS = 1500
 
 
