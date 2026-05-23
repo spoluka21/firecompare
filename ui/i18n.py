@@ -410,12 +410,17 @@ TRANSLATIONS = {
     "ai_initial_message_ua": {
         "ua": (
             "Привіт! Я допоможу підібрати оптимальну систему пожежної "
-            "сигналізації для вашого об'єкта. Розкажіть, який саме об'єкт "
-            "ви плануєте обладнати?"
+            "сигналізації для вашого об'єкта. Звертаю увагу: цей розрахунок "
+            "порівнює вартість обладнання та обслуговування і **не враховує** "
+            "вартість монтажних та пусконалагоджувальних робіт.\n\n"
+            "Розкажіть, який саме об'єкт ви плануєте обладнати?"
         ),
         "en": (
             "Hi! I'll help you choose the right fire alarm system for your "
-            "object. What type of object are you equipping?"
+            "object. Please note: this calculation compares equipment and "
+            "maintenance costs and does **not** include installation and "
+            "commissioning works.\n\n"
+            "What type of object are you equipping?"
         ),
     },
     "ai_input_placeholder": {
