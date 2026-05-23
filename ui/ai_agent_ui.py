@@ -73,6 +73,8 @@ def _render_collected_params(tool_input: dict):
             mnt_items = []
             if tool_input.get("maintenance_has_extinguish"):
                 mnt_items.append(t("mnt_has_extinguish"))
+            if tool_input.get("maintenance_has_monitoring"):
+                mnt_items.append(t("mnt_has_monitoring"))
             if tool_input.get("maintenance_has_smoke_vent"):
                 mnt_items.append(t("mnt_has_smoke_vent"))
             if tool_input.get("maintenance_has_valves"):
@@ -81,11 +83,6 @@ def _render_collected_params(tool_input: dict):
                 mnt_items.append(t("mnt_has_engineering"))
             if mnt_items:
                 st.markdown(f"**{t('mnt_composition')}:** " + ", ".join(mnt_items))
-            if tool_input.get("maintenance_subcontract_monitoring"):
-                st.markdown(
-                    f"**{t('mnt_has_monitoring_subcontract')}:** "
-                    f"{tool_input.get('maintenance_subcontract_cost_uah', 0):,.0f} ₴/міс"
-                )
 
 
 def render_ai_tab(catalog):
@@ -222,7 +219,41 @@ def _run_calculation_from_ai(catalog):
         if "mode2_result" in st.session_state:
             del st.session_state["mode2_result"]
         
+        # Зберігаємо об'єкт у список останніх (для sidebar), тримаємо останні 2
+        _save_recent_object(state, tool_input)
+        
         st.success(t("ai_calc_done"))
         st.balloons()
     except Exception as e:
         st.error(f"{t('ai_error')}: {e}")
+
+
+def _save_recent_object(state, tool_input):
+    """
+    Зберігає прорахований AI-об'єкт у session_state для показу в sidebar.
+    Тримає останні 2 об'єкти (новіші витісняють старіші).
+    """
+    import streamlit as st
+    
+    # Формуємо людиночитну назву
+    obj_type = tool_input.get("object_type", "object")
+    area = tool_input.get("total_area_m2", 0)
+    notes = tool_input.get("additional_notes", "")
+    
+    if notes:
+        label = f"AI: {notes[:30]}"
+    else:
+        label = f"AI: {obj_type} {area:,.0f} м²"
+    
+    recent = st.session_state.get("recent_ai_objects", [])  # list of (label, state)
+    
+    # Уникаємо дублів за назвою
+    recent = [(lbl, s) for (lbl, s) in recent if lbl != label]
+    
+    # Додаємо новий на початок
+    recent.insert(0, (label, state))
+    
+    # Тримаємо останні 2
+    recent = recent[:2]
+    
+    st.session_state["recent_ai_objects"] = recent

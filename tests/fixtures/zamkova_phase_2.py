@@ -36,7 +36,7 @@ NPA-АРХІТЕКТУРА (з ТЗ Cofem-проекту):
 УСЬОГО: 3 ППКП, 16 шлейфів
 """
 from schemas.object_state import (
-    ConstructionStage, CriticalZones, ExecutiveAutomation,
+    CertificationRequirement, ConstructionStage, CriticalZones, ExecutiveAutomation,
     FalseAlarmRequirement, FireHoseCabinetSignals, FunctionalZone,
     IOSignalAllocation, Jurisdiction, LifetimeHorizon, NPAArchitecture,
     NPAZone, NPAZoneType, ObjectData, ObjectState, ObjectType,
@@ -50,6 +50,7 @@ ZAMKOVA_PHASE_2 = ObjectState(
     language="uk",
     
     pre_object=PreObjectAnswers(
+        certification_requirement=CertificationRequirement.UA,
         jurisdictions=[Jurisdiction.UA],
         financing_constraints=TriState.NO,
         international_insurance=TriState.NO,
@@ -193,9 +194,10 @@ ZAMKOVA_PHASE_2 = ObjectState(
 
 ZAMKOVA_PHASE_2_PREMIUM = ZAMKOVA_PHASE_2.model_copy(deep=True)
 ZAMKOVA_PHASE_2_PREMIUM.session_id = "zamkova_phase_2_premium"
-ZAMKOVA_PHASE_2_PREMIUM.pre_object.jurisdictions = [Jurisdiction.UA, Jurisdiction.UK]
+ZAMKOVA_PHASE_2_PREMIUM.pre_object.certification_requirement = CertificationRequirement.UA_EU
+ZAMKOVA_PHASE_2_PREMIUM.pre_object.jurisdictions = [Jurisdiction.UA, Jurisdiction.EU]
 ZAMKOVA_PHASE_2_PREMIUM.pre_object.international_insurance = TriState.YES
-ZAMKOVA_PHASE_2_PREMIUM.pre_object.insurance_market = Jurisdiction.UK
+ZAMKOVA_PHASE_2_PREMIUM.pre_object.insurance_market = Jurisdiction.EU
 ZAMKOVA_PHASE_2_PREMIUM.pre_object.false_alarm_protection = FalseAlarmRequirement.PREMIUM
 ZAMKOVA_PHASE_2_PREMIUM.pre_object.cloud_monitoring_required = TriState.YES
 ZAMKOVA_PHASE_2_PREMIUM.pre_object.mobile_app_required = TriState.YES

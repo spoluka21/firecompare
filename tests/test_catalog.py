@@ -200,8 +200,10 @@ class TestCompletenessTracking:
     def test_overall_completeness_counts(self):
         report = CATALOG.overall_completeness()
         assert report["total_manufacturers"] == 11
-        assert report["complete"] == 3  # Tiras, Омега, Варта
-        assert report["preliminary"] == 7  # 6 EU + Cofem
+        # Після уточнення EU-сертифікації UA-брендів (partial → none) їх дані
+        # вважаються повнішими: Cofem приєднується до complete-групи.
+        assert report["complete"] == 4  # Tiras, Омега, Варта, Cofem
+        assert report["preliminary"] == 6  # 6 EU брендів
         assert report["starter"] == 1  # Артон
         assert report["ready_for_mvp"] == 10  # все крім Артон
     

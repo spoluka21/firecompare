@@ -112,7 +112,8 @@ streamlit run streamlit_app.py
 - **v0.1** — каталог + Pydantic-схеми
 - **v0.2** — повний 5-шаровий scoring + NPA + Modes 1/2/3 + Streamlit UI
 - **v0.3** — Maintenance calculator (Mode 4) + двомовність
-- **v0.4** — AI Assistant (Mode 5) через Claude API (поточна)
+- **v0.4** — AI Assistant (Mode 5) через Claude API
+- **v0.5** — рівні сертифікації (UA / UA+EU / EU+), спрощення ТО, чистий старт sidebar (поточна)
 
 ## AI-помічник: налаштування
 

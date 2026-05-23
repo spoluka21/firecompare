@@ -22,23 +22,38 @@ TRANSLATIONS = {
     
     # ── Sidebar: Об'єкт ──
     "object_section": {"ua": "🏢 Об'єкт", "en": "🏢 Object"},
-    "scenario_select": {"ua": "Завантажити приклад:", "en": "Load example:"},
+    "scenario_select": {"ua": "Об'єкт:", "en": "Object:"},
+    "scenario_new_object": {
+        "ua": "— Новий об'єкт —",
+        "en": "— New object —",
+    },
     "scenario_npa": {
         "ua": "Замкова II черга (NPA: 3 ППКП)",
         "en": "Zamkova Phase 2 (NPA: 3 panels)",
     },
     "scenario_premium": {
-        "ua": "Замкова Преміум (UA+UK страхування)",
-        "en": "Zamkova Premium (UA+UK insurance)",
+        "ua": "Замкова Преміум (UA+EU сертифікація)",
+        "en": "Zamkova Premium (UA+EU certification)",
     },
     "scenario_simple": {
         "ua": "Замкова Простий (1 ППКП — для контрасту)",
         "en": "Zamkova Simple (single panel — for contrast)",
     },
+    "new_object_hint": {
+        "ua": (
+            "Оберіть приклад зі списку або скористайтесь вкладкою «🤖 AI помічник», "
+            "щоб описати свій об'єкт. Прораховані об'єкти з'являться у цьому списку."
+        ),
+        "en": (
+            "Select an example from the list or use the «🤖 AI assistant» tab "
+            "to describe your object. Calculated objects will appear in this list."
+        ),
+    },
     "obj_type": {"ua": "Тип", "en": "Type"},
     "obj_area": {"ua": "Площа захищувана", "en": "Protected area"},
     "obj_floors": {"ua": "Поверхів", "en": "Floors"},
     "obj_jurisdictions": {"ua": "Юрисдикції", "en": "Jurisdictions"},
+    "obj_certification": {"ua": "Сертифікація", "en": "Certification"},
     "obj_horizon": {"ua": "Горизонт", "en": "Lifetime horizon"},
     "obj_false_alarm": {"ua": "Захист хибних", "en": "False alarm protection"},
     "npa_zones_count": {"ua": "NPA-зон", "en": "NPA zones"},
@@ -247,7 +262,7 @@ TRANSLATIONS = {
         "ua": "Розрахувати вартість ТО",
         "en": "Calculate maintenance cost",
     },
-    "mnt_distance": {"ua": "Відстань до об'єкта (км)", "en": "Distance to object (km)"},
+    "mnt_distance": {"ua": "Відстань від об'єкта до сервісного центру (км)", "en": "Distance from object to service center (km)"},
     "mnt_n_damages": {"ua": "Пошкоджень/міс", "en": "Damages/month"},
     "mnt_composition": {"ua": "Склад СПЗ", "en": "FAS composition"},
     "mnt_has_extinguish": {"ua": "Пожежогасіння", "en": "Fire extinguishing"},
@@ -257,13 +272,9 @@ TRANSLATIONS = {
         "ua": "Інженерні системи (ліфти/ворота)",
         "en": "Engineering systems (lifts/gates)",
     },
-    "mnt_has_monitoring_subcontract": {
-        "ua": "Пультове спостереження (підряд)",
-        "en": "Monitoring (subcontract)",
-    },
-    "mnt_subcontract_cost": {
-        "ua": "Вартість підряду (₴/міс)",
-        "en": "Subcontract cost (UAH/mo)",
+    "mnt_has_monitoring": {
+        "ua": "Пультове спостереження",
+        "en": "Monitoring station",
     },
     
     # ── Maintenance tab ──

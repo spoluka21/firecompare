@@ -88,9 +88,7 @@ FALSE_ALARMS_BY_LEVEL = {
 class SystemComposition(BaseModel):
     """Склад СПЗ — які підсистеми є на об'єкті"""
     has_ps_soue: bool = True  # завжди базово
-    has_monitoring_own: bool = False  # пультове спостереження виконуємо МИ
-    has_monitoring_subcontract: bool = False  # пультове виконує підрядник
-    subcontract_monitoring_uah: float = 0  # вартість підрядника (грн/міс)
+    has_monitoring: bool = False  # пультове спостереження (без розрізнення виконавця)
     has_smoke_vent: bool = False  # димовидалення
     has_extinguish: bool = False  # пожежогасіння
     has_valves: bool = False  # керування клапанами
@@ -99,7 +97,7 @@ class SystemComposition(BaseModel):
     def complexity_coefficient(self) -> float:
         """Сумарний коефіцієнт складності системи"""
         k = K_BASE  # ПС + СОУЕ завжди
-        if self.has_monitoring_own:
+        if self.has_monitoring:
             k += K_MONITORING
         if self.has_smoke_vent:
             k += K_SMOKE_VENT
@@ -115,10 +113,8 @@ class SystemComposition(BaseModel):
         """Текстовий опис складу"""
         if lang == "en":
             parts = ["PS + SOUE"]
-            if self.has_monitoring_own:
-                parts.append("Monitoring (own)")
-            if self.has_monitoring_subcontract:
-                parts.append("Monitoring (subcontract)")
+            if self.has_monitoring:
+                parts.append("Monitoring")
             if self.has_smoke_vent:
                 parts.append("Smoke ventilation")
             if self.has_extinguish:
@@ -130,10 +126,8 @@ class SystemComposition(BaseModel):
             return " + ".join(parts)
         
         parts = ["ПС + СОУЕ"]
-        if self.has_monitoring_own:
-            parts.append("Пультове спостереження (своє)")
-        if self.has_monitoring_subcontract:
-            parts.append("Пультове спостереження (підряд)")
+        if self.has_monitoring:
+            parts.append("Пультове спостереження")
         if self.has_smoke_vent:
             parts.append("Димовидалення")
         if self.has_extinguish:
@@ -318,10 +312,9 @@ def calculate_maintenance(
     
     price_own_calculated = cost_own_total * (1 + params.markup)
     
-    subcontract = (params.composition.subcontract_monitoring_uah
-                   if params.composition.has_monitoring_subcontract else 0)
-    
-    price_calculated_total = price_own_calculated + subcontract
+    # Підряд прибрано — ціна формується тільки з власних робіт (для об'єктивності)
+    subcontract = 0.0
+    price_calculated_total = price_own_calculated
     
     discount_uah = price_calculated_total * params.strategic_discount_pct / 100
     price_final_month = price_calculated_total - discount_uah

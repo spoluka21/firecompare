@@ -43,7 +43,7 @@ def test_tool_input_to_state_full():
         "total_area_m2": 20000,
         "floors_above": 3,
         "floors_below": 2,
-        "jurisdictions": ["UA", "UK"],
+        "certification_requirement": "UA+EU",
         "lifetime_horizon": "long_15_20",
         "false_alarm_protection": "premium",
         "financing_constraints": "no",
@@ -55,16 +55,17 @@ def test_tool_input_to_state_full():
         "maintenance_has_smoke_vent": True,
         "maintenance_has_valves": True,
         "maintenance_has_engineering": True,
+        "maintenance_has_monitoring": True,
         "maintenance_n_damages_month": 0.8,
-        "maintenance_subcontract_monitoring": True,
-        "maintenance_subcontract_cost_uah": 3500,
         "comparison_set": ["cofem"],  # тільки Cofem
         "additional_notes": "Premium TRC project",
         "language": "en",
     }
     state_dict, mnt = build_state_from_tool_input(tool_input)
     
-    assert state_dict["pre_object"]["jurisdictions"] == ["UA", "UK"]
+    # certification_requirement UA+EU → jurisdictions [UA, EU]
+    assert state_dict["pre_object"]["certification_requirement"] == "UA+EU"
+    assert state_dict["pre_object"]["jurisdictions"] == ["UA", "EU"]
     assert state_dict["pre_object"]["lifetime_horizon"] == "long_15_20"
     assert state_dict["pre_object"]["false_alarm_protection"] == "premium"
     assert state_dict["comparison_set"] == ["cofem"]
@@ -74,9 +75,28 @@ def test_tool_input_to_state_full():
     assert mnt["distance_km"] == 20
     assert mnt["composition"]["has_extinguish"] is True
     assert mnt["composition"]["has_smoke_vent"] is True
-    assert mnt["composition"]["has_monitoring_subcontract"] is True
-    assert mnt["composition"]["subcontract_monitoring_uah"] == 3500
+    assert mnt["composition"]["has_monitoring"] is True
     print("✓ test_tool_input_to_state_full")
+
+
+def test_certification_levels():
+    """Кожен рівень сертифікації → правильні похідні jurisdictions"""
+    cases = [
+        ("UA", ["UA"]),
+        ("UA+EU", ["UA", "EU"]),
+        ("EU+", ["EU"]),
+    ]
+    for cert_level, expected_juris in cases:
+        tool_input = {
+            "object_type": "warehouse",
+            "total_area_m2": 5000,
+            "floors_above": 1,
+            "certification_requirement": cert_level,
+        }
+        state_dict, _ = build_state_from_tool_input(tool_input)
+        assert state_dict["pre_object"]["certification_requirement"] == cert_level
+        assert state_dict["pre_object"]["jurisdictions"] == expected_juris
+    print("✓ test_certification_levels")
 
 
 def test_tool_input_no_maintenance():
@@ -196,6 +216,7 @@ def test_no_api_key():
 if __name__ == "__main__":
     test_tool_input_to_state_minimal()
     test_tool_input_to_state_full()
+    test_certification_levels()
     test_tool_input_no_maintenance()
     test_chat_result_parsing_text_only()
     test_chat_result_parsing_with_tool()

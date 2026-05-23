@@ -41,29 +41,18 @@ def render_maintenance_sidebar_params(default_area: float, default_distance: flo
     
     # Склад СПЗ
     st.markdown(f"**{t('mnt_composition')}:**")
+    has_monitoring = st.checkbox(t("mnt_has_monitoring"), value=False, key="mnt_monitoring")
     has_extinguish = st.checkbox(t("mnt_has_extinguish"), value=False, key="mnt_extinguish")
     has_smoke_vent = st.checkbox(t("mnt_has_smoke_vent"), value=False, key="mnt_smoke_vent")
     has_valves = st.checkbox(t("mnt_has_valves"), value=False, key="mnt_valves")
     has_engineering = st.checkbox(t("mnt_has_engineering"), value=False, key="mnt_engineering")
     
-    has_subcontract = st.checkbox(
-        t("mnt_has_monitoring_subcontract"), value=False, key="mnt_subcontract",
-    )
-    subcontract_cost = 0.0
-    if has_subcontract:
-        subcontract_cost = st.number_input(
-            t("mnt_subcontract_cost"),
-            min_value=0.0, max_value=50000.0, value=2070.0, step=100.0,
-            key="mnt_subcontract_cost",
-        )
-    
     composition = SystemComposition(
+        has_monitoring=has_monitoring,
         has_extinguish=has_extinguish,
         has_smoke_vent=has_smoke_vent,
         has_valves=has_valves,
         has_engineering_systems=has_engineering,
-        has_monitoring_subcontract=has_subcontract,
-        subcontract_monitoring_uah=subcontract_cost,
     )
     
     return MaintenanceParams(
@@ -326,22 +315,15 @@ def render_mode4_tab(result, state, catalog, display_name_func):
             )
         with col_b:
             st.markdown(f"**{t('mnt_composition')}:**")
+            sa_monitoring = st.checkbox(
+                t("mnt_has_monitoring"), value=False, key="sa_monitoring"
+            )
             sa_extinguish = st.checkbox(
                 t("mnt_has_extinguish"), value=True, key="sa_extinguish"
             )
             sa_smoke = st.checkbox(t("mnt_has_smoke_vent"), value=False, key="sa_smoke")
             sa_valves = st.checkbox(t("mnt_has_valves"), value=False, key="sa_valves")
             sa_eng = st.checkbox(t("mnt_has_engineering"), value=False, key="sa_eng")
-            sa_subcontract = st.checkbox(
-                t("mnt_has_monitoring_subcontract"), value=True, key="sa_subcontract"
-            )
-            sa_sub_cost = 0.0
-            if sa_subcontract:
-                sa_sub_cost = st.number_input(
-                    t("mnt_subcontract_cost"),
-                    min_value=0.0, max_value=50000.0, value=2070.0, step=100.0,
-                    key="sa_sub_cost",
-                )
             
             sa_discount = st.slider(
                 t("mnt_strategic_discount"),
@@ -353,12 +335,11 @@ def render_mode4_tab(result, state, catalog, display_name_func):
         sa_params = MaintenanceParams(
             object_area_m2=sa_area,
             composition=SystemComposition(
+                has_monitoring=sa_monitoring,
                 has_extinguish=sa_extinguish,
                 has_smoke_vent=sa_smoke,
                 has_valves=sa_valves,
                 has_engineering_systems=sa_eng,
-                has_monitoring_subcontract=sa_subcontract,
-                subcontract_monitoring_uah=sa_sub_cost,
             ),
             distance_km=sa_distance,
             n_damages_month=sa_n_damages,

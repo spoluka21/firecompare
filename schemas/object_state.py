@@ -23,6 +23,34 @@ class Jurisdiction(str, Enum):
     US = "US"
 
 
+class CertificationRequirement(str, Enum):
+    """
+    Рівень вимог до сертифікації обладнання (зростаюча планка).
+    
+    - UA      → потрібна сертифікація України (ДСТУ EN 54)
+    - UA_EU   → потрібна і українська, і європейська (ДСТУ EN 54 + EN 54)
+    - EU_PLUS → потрібна європейська від провідних центрів (LPCB, VdS тощо)
+    
+    У перспективі: GB (Велика Британія), USA.
+    """
+    UA = "UA"          # сертифікація України
+    UA_EU = "UA+EU"    # сертифікація України та Євросоюзу
+    EU_PLUS = "EU+"    # сертифікація Євросоюзу в провідних центрах
+
+    def label(self, lang: str = "ua") -> str:
+        if lang == "en":
+            return {
+                "UA": "UA (Ukraine certification)",
+                "UA+EU": "UA+EU (Ukraine + EU certification)",
+                "EU+": "EU+ (EU leading certification centers)",
+            }[self.value]
+        return {
+            "UA": "UA (сертифікація України)",
+            "UA+EU": "UA+EU (сертифікація України та ЄС)",
+            "EU+": "EU+ (сертифікація ЄС у провідних центрах)",
+        }[self.value]
+
+
 class TriState(str, Enum):
     YES = "yes"
     NO = "no"
@@ -73,7 +101,10 @@ class ParkingType(str, Enum):
 class PreObjectAnswers(BaseModel):
     """Фаза 1 — 5 пре-об'єктних блоків питань"""
     
-    # Q1. Юрисдикція + фінансування
+    # Q1. Вимоги до сертифікації + фінансування
+    # НОВЕ: certification_requirement — основне поле (рівень вимог UA / UA+EU / EU+)
+    certification_requirement: CertificationRequirement = CertificationRequirement.UA
+    # jurisdictions — DEPRECATED, лишається для зворотної сумісності зі старими фікстурами
     jurisdictions: list[Jurisdiction] = Field(default_factory=lambda: [Jurisdiction.UA])
     financing_constraints: TriState = TriState.NO
     financing_comment: Optional[str] = None

@@ -46,7 +46,7 @@ OMEGA = Manufacturer(
         "Оповіщувачі — постачання через Tiras (залежність)",
     ],
     certifications=Certifications(
-        EU_EN54=JurisdictionCert(status=CertificationStatus.PARTIAL),
+        EU_EN54=JurisdictionCert(status=CertificationStatus.NONE),
         UA_DSTU_EN54=JurisdictionCert(status=CertificationStatus.FULL,
                                        certified_parts=["-2", "-4", "-7", "-17", "-18"]),
         UK_BS_LPCB=JurisdictionCert(status=CertificationStatus.NONE),

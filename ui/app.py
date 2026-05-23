@@ -99,44 +99,61 @@ st.markdown(f"""
 with st.sidebar:
     st.markdown(f"### {t('object_section')}")
     
-    scenario_options = {
+    # Базові приклади (Замкова завжди доступна) + останні 2 AI-прораховані
+    NEW_OBJECT = t("scenario_new_object")
+    
+    base_examples = {
         t("scenario_npa"): ZAMKOVA_PHASE_2,
         t("scenario_premium"): ZAMKOVA_PHASE_2_PREMIUM,
         t("scenario_simple"): ZAMKOVA_PHASE_2_SIMPLE,
     }
     
+    # Останні 2 AI-прораховані об'єкти зберігаються в session_state
+    recent_objects = st.session_state.get("recent_ai_objects", [])  # list of (label, ObjectState)
+    recent_dict = {label: state for label, state in recent_objects}
+    
+    # Повний список опцій: Новий об'єкт → останні AI → Замкова
+    scenario_options = {NEW_OBJECT: None}
+    scenario_options.update(recent_dict)
+    scenario_options.update(base_examples)
+    
     scenario_choice = st.selectbox(
         t("scenario_select"),
         list(scenario_options.keys()),
-        index=0,
+        index=0,  # за замовчуванням «Новий об'єкт»
     )
     base_state = scenario_options[scenario_choice]
     
-    obj = base_state.object
-    st.markdown(
-        f"""
-        <div class="metric-card">
-        <b>{t('obj_type')}:</b> {obj.object_type.value}<br>
-        <b>{t('obj_area')}:</b> {obj.total_area_m2:,.0f} м²<br>
-        <b>{t('obj_floors')}:</b> {obj.floors_above} + {obj.floors_below}<br>
-        <b>{t('obj_jurisdictions')}:</b> {', '.join(j.value for j in base_state.pre_object.jurisdictions)}<br>
-        <b>{t('obj_horizon')}:</b> {base_state.pre_object.lifetime_horizon.value}<br>
-        <b>{t('obj_false_alarm')}:</b> {base_state.pre_object.false_alarm_protection.value}<br>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    
-    if base_state.npa_architecture:
-        st.markdown(f"**{t('npa_zones_count')}:** {len(base_state.npa_architecture.zones)}")
-        for z in base_state.npa_architecture.zones:
-            zone_label = z.name_en if get_lang() == "en" and z.name_en else z.name
-            # Singular/plural для EN
-            if get_lang() == "en":
-                fire_zones_text = "fire zone" if z.fire_zones_count == 1 else "fire zones"
-            else:
-                fire_zones_text = t("fire_zones_short")
-            st.markdown(f"• {zone_label} ({z.fire_zones_count} {fire_zones_text})")
+    # Якщо обрано «Новий об'єкт» — показуємо підказку, не показуємо параметри
+    if base_state is None:
+        st.info(t("new_object_hint"))
+    else:
+        obj = base_state.object
+        cert_req = getattr(base_state.pre_object, "certification_requirement", None)
+        cert_label = cert_req.value if cert_req else "UA"
+        st.markdown(
+            f"""
+            <div class="metric-card">
+            <b>{t('obj_type')}:</b> {obj.object_type.value}<br>
+            <b>{t('obj_area')}:</b> {obj.total_area_m2:,.0f} м²<br>
+            <b>{t('obj_floors')}:</b> {obj.floors_above} + {obj.floors_below}<br>
+            <b>{t('obj_certification')}:</b> {cert_label}<br>
+            <b>{t('obj_horizon')}:</b> {base_state.pre_object.lifetime_horizon.value}<br>
+            <b>{t('obj_false_alarm')}:</b> {base_state.pre_object.false_alarm_protection.value}<br>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        
+        if base_state.npa_architecture:
+            st.markdown(f"**{t('npa_zones_count')}:** {len(base_state.npa_architecture.zones)}")
+            for z in base_state.npa_architecture.zones:
+                zone_label = z.name_en if get_lang() == "en" and z.name_en else z.name
+                if get_lang() == "en":
+                    fire_zones_text = "fire zone" if z.fire_zones_count == 1 else "fire zones"
+                else:
+                    fire_zones_text = t("fire_zones_short")
+                st.markdown(f"• {zone_label} ({z.fire_zones_count} {fire_zones_text})")
     
     st.markdown("---")
     st.markdown(f"### {t('comparison_set')}")
@@ -144,9 +161,12 @@ with st.sidebar:
     all_mfrs = [m for m in CATALOG.manufacturers 
                 if m.manufacturer_id in ["cofem", "tiras", "omega", "varta"]]
     
+    # Дефолтний comparison_set: якщо є base_state — з нього, інакше всі 4
+    default_set = base_state.comparison_set if base_state else ["cofem", "tiras", "omega", "varta"]
+    
     selected_mfr_ids = []
     for mfr in all_mfrs:
-        default = mfr.manufacturer_id in base_state.comparison_set
+        default = mfr.manufacturer_id in default_set
         if st.checkbox(mfr_name(mfr), value=default, key=f"mfr_{mfr.manufacturer_id}"):
             selected_mfr_ids.append(mfr.manufacturer_id)
     
@@ -154,20 +174,35 @@ with st.sidebar:
     
     # ── Maintenance параметри ──
     from ui.maintenance_ui import render_maintenance_sidebar_params
+    default_area = base_state.object.total_area_m2 if base_state else 5000.0
     mnt_params = render_maintenance_sidebar_params(
-        default_area=base_state.object.total_area_m2,
+        default_area=default_area,
         default_distance=5.0,
     )
     
     st.markdown("---")
-    run_button = st.button(t("calculate_btn"), type="primary", use_container_width=True)
+    # Кнопка РОЗРАХУВАТИ активна тільки коли обрано реальний об'єкт
+    if base_state is None:
+        st.button(
+            t("calculate_btn"), type="primary", use_container_width=True,
+            disabled=True,
+        )
+        run_button = False
+    else:
+        run_button = st.button(
+            t("calculate_btn"), type="primary", use_container_width=True,
+        )
 
 
-state = base_state.model_copy(deep=True)
-state.comparison_set = selected_mfr_ids
+# Якщо base_state is None (Новий об'єкт) — стан для standalone-калькулятора/AI
+if base_state is None:
+    state = None
+else:
+    state = base_state.model_copy(deep=True)
+    state.comparison_set = selected_mfr_ids
 
-# Якщо обрано рахувати ТО — додаємо в state
-if mnt_params is not None:
+# Якщо обрано рахувати ТО — додаємо в state (тільки якщо є реальний об'єкт)
+if state is not None and mnt_params is not None:
     state.maintenance_params = mnt_params.model_dump()
 
 # Локалізована мапа назв виробників (для UA/EN)

@@ -195,22 +195,65 @@ JURISDICTION_CHECKERS = {
 }
 
 
+# Мапа: рівень сертифікації → які перевірки потрібні
+# UA      → тільки UA (ДСТУ EN 54)
+# UA+EU   → UA + EU (ДСТУ EN 54 + EN 54)
+# EU+     → EU від провідних центрів (EN 54 з certification_body)
+from schemas.object_state import CertificationRequirement
+
+CERTIFICATION_CHECKS = {
+    CertificationRequirement.UA: [Jurisdiction.UA],
+    CertificationRequirement.UA_EU: [Jurisdiction.UA, Jurisdiction.EU],
+    CertificationRequirement.EU_PLUS: [Jurisdiction.EU],
+}
+
+
+def _resolve_required_jurisdictions(state: ObjectState) -> list[Jurisdiction]:
+    """
+    Визначає, які перевірки запускати, на основі рівня сертифікації.
+    Падіння назад на jurisdictions для старих фікстур без certification_requirement.
+    """
+    cert_req = getattr(state.pre_object, "certification_requirement", None)
+    if cert_req is not None:
+        return CERTIFICATION_CHECKS.get(cert_req, [Jurisdiction.UA])
+    # fallback на старе поле
+    return state.pre_object.jurisdictions
+
+
 def check_compliance(
     state: ObjectState, manufacturer: Manufacturer
 ) -> ComplianceResult:
     """
-    Перевірити compliance виробника для заданого набору активних юрисдикцій.
+    Перевірити compliance виробника для заданого рівня сертифікації.
     
     Правило об'єднання статусів:
     - Будь-який FAIL → overall = FAIL (виключається з comparison)
     - Інакше будь-який WARNING → overall = WARNING (показуємо з примітками)
     - Усі PASS → overall = PASS
+    
+    Для рівня EU+ застосовується підвищена планка: EN 54 має бути не лише
+    наявна, а й від визнаного сертифікаційного центру (certification_body).
     """
+    required = _resolve_required_jurisdictions(state)
+    cert_req = getattr(state.pre_object, "certification_requirement", None)
+    
     results: list[JurisdictionResult] = []
     
-    for jur in state.pre_object.jurisdictions:
+    for jur in required:
         checker = JURISDICTION_CHECKERS[jur]
-        results.append(checker(manufacturer))
+        res = checker(manufacturer)
+        
+        # Для EU+ — підвищена планка: вимагаємо наявність certification_body
+        if cert_req == CertificationRequirement.EU_PLUS and jur == Jurisdiction.EU:
+            eu_cert = manufacturer.certifications.EU_EN54
+            if res.status == "pass" and not eu_cert.certification_body:
+                res.status = "warning"
+                res.reasoning += (
+                    " Для рівня EU+ бажано підтвердження від провідного "
+                    "сертифікаційного центру (LPCB, VdS, AENOR тощо)."
+                )
+        
+        results.append(res)
     
     # Об'єднання статусів
     statuses = {r.status for r in results}
@@ -223,20 +266,21 @@ def check_compliance(
         overall = "pass"
     
     # Підсумкове повідомлення
+    cert_label = cert_req.value if cert_req else ", ".join(j.value for j in required)
+    
     if overall == "pass":
-        active_str = ", ".join(j.value for j in state.pre_object.jurisdictions)
-        message = f"Повністю відповідає активним юрисдикціям: {active_str}."
+        message = f"Повністю відповідає рівню сертифікації: {cert_label}."
     elif overall == "warning":
         warnings = [r for r in results if r.status == "warning"]
         message = (
-            f"Проходить з застереженнями ({len(warnings)} нюанс(ів)). "
-            "Деталі — у by_jurisdiction нижче."
+            f"Проходить рівень «{cert_label}» з застереженнями "
+            f"({len(warnings)} нюанс(ів)). Деталі — нижче."
         )
     else:
         fails = [r.jurisdiction.value for r in results if r.status == "fail"]
         message = (
-            f"Не проходить юрисдикцію(ї): {', '.join(fails)}. "
-            "Виключено з comparison-set."
+            f"Не відповідає рівню «{cert_label}»: бракує сертифікації "
+            f"{', '.join(fails)}. Виключено з comparison-set."
         )
     
     return ComplianceResult(

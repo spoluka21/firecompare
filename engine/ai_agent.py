@@ -69,7 +69,11 @@ Help the user describe their object so the FireCompare engine can:
 1. Object type (residential, commercial, mixed-use, etc.)
 2. Total protected area in m²
 3. Number of floors (above + below ground)
-4. Jurisdictions (UA standard; UK/EU/US if foreign investor or insurance)
+4. Certification requirement level:
+   - "UA" → Ukrainian certification only (DSTU EN 54) — the standard case
+   - "UA+EU" → both Ukrainian and EU certification (for foreign investors / EU insurance)
+   - "EU+" → EU certification from leading bodies (LPCB, VdS) — highest bar
+   Default to "UA" unless the user mentions foreign investor, EU insurance, or premium requirements.
 
 ## Phase 2: Pre-object criteria (REQUIRED)
 5. Lifetime horizon: short (3-5y) / medium (7-10y) / long (15-20y) — for TCO calculation
@@ -79,17 +83,16 @@ Help the user describe their object so the FireCompare engine can:
 9. Cloud monitoring required: yes / no / not_sure
 
 ## Phase 3: Maintenance parameters (OPTIONAL but recommended)
-10. Distance from your office to object (km)
-11. FAS composition: just PS+SOUE? + fire extinguishing? + smoke vent? + valves?
-12. Monitoring subcontracted? If yes, what's the monthly cost?
+10. Distance from object to service center (km)
+11. FAS composition: just PS+SOUE? + monitoring station? + fire extinguishing? + smoke vent? + valves? + engineering systems?
 
 ## Phase 4: Comparison set
-13. Which manufacturers to compare? (default: all 4 — Cofem, Tiras, Omega, Varta)
+12. Which manufacturers to compare? (default: all 4 — Cofem, Tiras, Omega, Varta)
 
 # DEFAULTS YOU CAN USE
 - If object_type ambiguous → mixed_use
 - If floors_below not mentioned → 0
-- If jurisdictions not specified → ["UA"] only
+- If certification_requirement not specified → "UA"
 - If lifetime_horizon unclear → "medium_7_10"
 - If false_alarm unclear → "standard"
 - If financing_constraints unclear → "not_sure"
@@ -156,11 +159,14 @@ SUBMIT_TOOL = {
                 "default": 0,
                 "description": "Number of floors below ground (basement/parking)",
             },
-            "jurisdictions": {
-                "type": "array",
-                "items": {"type": "string", "enum": ["UA", "UK", "EU", "US"]},
-                "default": ["UA"],
-                "description": "Active regulatory jurisdictions",
+            "certification_requirement": {
+                "type": "string",
+                "enum": ["UA", "UA+EU", "EU+"],
+                "default": "UA",
+                "description": (
+                    "Certification requirement level: 'UA' = Ukraine only, "
+                    "'UA+EU' = Ukraine + EU, 'EU+' = EU leading centers (LPCB/VdS)"
+                ),
             },
             
             # ─── PHASE 2: Pre-object criteria ───
@@ -203,7 +209,7 @@ SUBMIT_TOOL = {
                 "type": "number",
                 "minimum": 0,
                 "default": 5,
-                "description": "Distance from service office to object",
+                "description": "Distance from object to service center (km)",
             },
             "maintenance_has_extinguish": {
                 "type": "boolean",
@@ -225,16 +231,10 @@ SUBMIT_TOOL = {
                 "default": False,
                 "description": "Does FAS interface with elevators, gates, curtains?",
             },
-            "maintenance_subcontract_monitoring": {
+            "maintenance_has_monitoring": {
                 "type": "boolean",
                 "default": False,
-                "description": "Is monitoring service subcontracted?",
-            },
-            "maintenance_subcontract_cost_uah": {
-                "type": "number",
-                "minimum": 0,
-                "default": 0,
-                "description": "Monthly cost of subcontracted monitoring (UAH)",
+                "description": "Does FAS include 24/7 monitoring station service?",
             },
             "maintenance_n_damages_month": {
                 "type": "number",
@@ -398,8 +398,9 @@ def build_state_from_tool_input(
         (object_state_dict, maintenance_params_dict_or_none)
     """
     from schemas.object_state import (
-        FalseAlarmRequirement, Jurisdiction, LifetimeHorizon, ObjectData,
-        ObjectState, ObjectType, PreObjectAnswers, TriState,
+        CertificationRequirement, FalseAlarmRequirement, Jurisdiction,
+        LifetimeHorizon, ObjectData, ObjectState, ObjectType,
+        PreObjectAnswers, TriState,
     )
     from engine.maintenance_calculator import MaintenanceParams, SystemComposition
     import uuid
@@ -407,10 +408,20 @@ def build_state_from_tool_input(
     # ─── ObjectState ───
     object_type = ObjectType(tool_input["object_type"])
     
+    # Сертифікаційний рівень (новий механізм). Маємо також похідні jurisdictions
+    # для зворотної сумісності зі старим кодом.
+    cert_req = CertificationRequirement(
+        tool_input.get("certification_requirement", "UA")
+    )
+    _CERT_TO_JURIS = {
+        CertificationRequirement.UA: [Jurisdiction.UA],
+        CertificationRequirement.UA_EU: [Jurisdiction.UA, Jurisdiction.EU],
+        CertificationRequirement.EU_PLUS: [Jurisdiction.EU],
+    }
+    
     pre_object = PreObjectAnswers(
-        jurisdictions=[
-            Jurisdiction(j) for j in tool_input.get("jurisdictions", ["UA"])
-        ],
+        certification_requirement=cert_req,
+        jurisdictions=_CERT_TO_JURIS[cert_req],
         lifetime_horizon=LifetimeHorizon(
             tool_input.get("lifetime_horizon", "medium_7_10")
         ),
@@ -456,12 +467,7 @@ def build_state_from_tool_input(
             has_engineering_systems=tool_input.get(
                 "maintenance_has_engineering", False
             ),
-            has_monitoring_subcontract=tool_input.get(
-                "maintenance_subcontract_monitoring", False
-            ),
-            subcontract_monitoring_uah=float(
-                tool_input.get("maintenance_subcontract_cost_uah", 0)
-            ),
+            has_monitoring=tool_input.get("maintenance_has_monitoring", False),
         )
         
         mnt_params = MaintenanceParams(

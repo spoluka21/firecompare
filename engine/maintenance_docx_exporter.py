@@ -52,7 +52,7 @@ L10N = {
         "value": "Значення",
         "area": "Загальна площа захищуваної території",
         "composition": "Склад СПЗ",
-        "distance": "Відстань до об'єкта від офісу",
+        "distance": "Відстань від об'єкта до сервісного центру",
         "subcontract": "Пультове спостереження",
         "subcontract_yes": "виконує підрядна організація",
         "manufacturer": "Виробник системи",
@@ -157,7 +157,7 @@ L10N = {
         "value": "Value",
         "area": "Total protected area",
         "composition": "FAS composition",
-        "distance": "Distance to object from office",
+        "distance": "Distance from object to service center",
         "subcontract": "Monitoring service",
         "subcontract_yes": "performed by subcontractor",
         "manufacturer": "System manufacturer",
@@ -391,7 +391,7 @@ def export_maintenance_memo_to_docx(
     # Subtitle
     _add_para(
         doc,
-        L(language, "generated", ver="0.3.0", date=datetime.now().strftime("%Y-%m-%d %H:%M")),
+        L(language, "generated", ver="0.5.0", date=datetime.now().strftime("%Y-%m-%d %H:%M")),
         italic=True, color=TEXT_GRAY, align=WD_ALIGN_PARAGRAPH.CENTER, size=10,
     )
     doc.add_paragraph()
@@ -404,8 +404,6 @@ def export_maintenance_memo_to_docx(
         [L(language, "composition"), composition.composition_label(lang=language)],
         [L(language, "distance"), f"{params.distance_km} km"],
     ]
-    if composition.has_monitoring_subcontract:
-        s1_rows.append([L(language, "subcontract"), L(language, "subcontract_yes")])
     if result.manufacturer_name:
         s1_rows.append([L(language, "manufacturer"), result.manufacturer_name])
     
@@ -463,11 +461,6 @@ def export_maintenance_memo_to_docx(
         [L(language, "admin_rate"), f"{admin_pct}%"],
         [L(language, "markup"), f"{markup_pct}%"],
     ]
-    if composition.has_monitoring_subcontract:
-        s3_rows.append([
-            L(language, "subcontract_cost"),
-            f"{composition.subcontract_monitoring_uah:,.0f} {L(language, 'uah')}{L(language, 'month_per')}",
-        ])
     
     _add_table(
         doc,
