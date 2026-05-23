@@ -449,6 +449,34 @@ TRANSLATIONS = {
     },
     "ai_error": {"ua": "Помилка", "en": "Error"},
     "ai_token_usage": {"ua": "Токенів", "en": "Tokens"},
+    
+    # ── AI mode selector + detailed mode display ──
+    "ai_mode_label": {"ua": "Режим аналізу:", "en": "Analysis mode:"},
+    "ai_mode_quick": {"ua": "Швидка оцінка", "en": "Quick estimate"},
+    "ai_mode_detailed": {"ua": "Детальний аналіз", "en": "Detailed analysis"},
+    "ai_mode_quick_hint": {
+        "ua": "Швидка оцінка за загальною площею та основними параметрами.",
+        "en": "Quick estimate based on total area and basic parameters.",
+    },
+    "ai_mode_detailed_hint": {
+        "ua": (
+            "Детальний аналіз: розбивка на зони, склад протипожежних систем "
+            "по кожній зоні, ієрархія ППКП, облік вогнестійкого кабелю."
+        ),
+        "en": (
+            "Detailed analysis: zone breakdown, fire-protection composition per "
+            "zone, panel hierarchy, fire-resistant cable accounting."
+        ),
+    },
+    "ai_mode_locked": {
+        "ua": "Режим зафіксовано на час діалогу. Щоб змінити — натисніть «Почати спочатку».",
+        "en": "Mode is locked during the dialog. To change — click «Start over».",
+    },
+    "obj_structure": {"ua": "Структура", "en": "Structure"},
+    "obj_zones": {"ua": "Зони", "en": "Zones"},
+    "obj_hierarchy": {"ua": "Архітектура ППКП", "en": "Panel architecture"},
+    "obj_hierarchy_yes": {"ua": "ієрархічна", "en": "hierarchical"},
+    "col_frc": {"ua": "Вогнестійкий кабель (м)", "en": "Fire-resistant cable (m)"},
 }
 
 

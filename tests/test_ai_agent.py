@@ -99,6 +99,55 @@ def test_certification_levels():
     print("✓ test_certification_levels")
 
 
+def test_detailed_mode_zones():
+    """Детальний режим: масив зон → FunctionalZone dict з composition"""
+    tool_input = {
+        "object_type": "mixed_use",
+        "object_structure": "heterogeneous_complex",
+        "total_area_m2": 4000,
+        "floors_above": 2,
+        "panel_hierarchy": "hierarchical",
+        "zones": [
+            {"name": "Готель", "purpose": "hotel", "area_m2": 2500, "floors": 2,
+             "elevators_fire_mode": 2, "fire_hose_cabinets": 4},
+            {"name": "Кухня", "purpose": "kitchen", "area_m2": 300, "floors": 1,
+             "subdivision_type": "open", "suppression_type": "powder"},
+            {"name": "Паркінг", "purpose": "parking", "area_m2": 1200, "floors": 1,
+             "subdivision_type": "open", "smoke_dampers": 3},
+        ],
+    }
+    state_dict, _ = build_state_from_tool_input(tool_input)
+    obj = state_dict["object"]
+    assert obj["object_structure"] == "heterogeneous_complex"
+    assert len(obj["zones"]) == 3
+    # Кухня з пожежогасінням
+    kitchen = obj["zones"]["Кухня"]
+    assert kitchen["purpose"] == "kitchen"
+    assert kitchen["composition"]["suppression_type"] == "powder"
+    # Готель з ВПВ
+    hotel = obj["zones"]["Готель"]
+    assert hotel["composition"]["fire_hose_cabinets"] == 4
+    print("✓ test_detailed_mode_zones")
+
+
+def test_detailed_mode_automation_filter():
+    """Детальний режим: житло ≤9 поверхів → автоматика не потрібна (авто)"""
+    tool_input = {
+        "object_type": "residential_multi",
+        "total_area_m2": 6000,
+        "floors_above": 9,
+        "zones": [
+            {"name": "Житло", "purpose": "residential", "area_m2": 6000, "floors": 9},
+        ],
+    }
+    state_dict, _ = build_state_from_tool_input(tool_input)
+    housing = state_dict["object"]["zones"]["Житло"]
+    # Фільтр §4.0 має визначити, що автоматика не потрібна
+    assert housing["requires_automation"] is False
+    assert housing["composition"] is None
+    print("✓ test_detailed_mode_automation_filter")
+
+
 def test_tool_input_no_maintenance():
     """Якщо calculate_maintenance=False, mnt_dict = None"""
     tool_input = {
@@ -217,6 +266,8 @@ if __name__ == "__main__":
     test_tool_input_to_state_minimal()
     test_tool_input_to_state_full()
     test_certification_levels()
+    test_detailed_mode_zones()
+    test_detailed_mode_automation_filter()
     test_tool_input_no_maintenance()
     test_chat_result_parsing_text_only()
     test_chat_result_parsing_with_tool()

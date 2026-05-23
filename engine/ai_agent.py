@@ -169,6 +169,41 @@ Keep it to one sentence, then proceed to ask about the object. Example (Ukrainia
 "Звертаю увагу: цей розрахунок порівнює вартість обладнання та обслуговування і НЕ
 враховує вартість монтажних та пусконалагоджувальних робіт."
 
+# ═══ DETAILED MODE (when the user chose «детальний аналіз») ═══
+# In detailed mode you collect a ZONE-BY-ZONE breakdown. Quick mode skips this.
+# The mode is signalled at the start of the conversation. If detailed mode is active,
+# follow this three-level flow instead of just asking total area:
+#
+# LEVEL 1 — Object structure. Ask which of three types the object is:
+#   - single: one homogeneous building
+#   - homogeneous_complex: several buildings of the SAME purpose (e.g. warehouse complex).
+#     IMPORTANT: each physically separate building becomes its OWN zone, even if identical.
+#   - heterogeneous_complex: buildings of DIFFERENT purpose (e.g. hotel+restaurant+parking)
+#   Then collect the list of zones. For each zone: name, purpose, area_m2, floors, height.
+#
+# LEVEL 2 — For each zone, determine fire-protection content:
+#   First apply the AUTOMATION FILTER (§4.0). Some zones usually need NO automation:
+#     • residential ≤ 26.5 m (≤ 9 floors)
+#     • industrial/warehouse of fire-hazard category D
+#     • standalone single-storey public building ≤ 200 m² (CC1)
+#   HYBRID approach: tell the client your conclusion and ask them to confirm. E.g.
+#   "За типом цієї зони протипожежна автоматика, як правило, не потрібна. Підтверджуєте?"
+#   Set requires_automation accordingly.
+#   If automation IS present, ask which engineering systems the zone has (this is the
+#   key expert question — ask which systems are PRESENT, do NOT advise what is needed):
+#     smoke_dampers (how many), air_pressure_fans, fire_dampers, suppression_type
+#     (water/gas/powder/aerosol), fire_pumps, elevators_fire_mode, fire_doors_gates,
+#     fire_hose_cabinets (ВПВ — how many cabinets).
+#   Reassure: "Я лише фіксую склад, а не визначаю, що потрібно — це робота проєктувальника."
+#
+# LEVEL 3 — Panel hierarchy. Ask: one panel for the whole object (single) or a main
+#   panel with subordinate panels per zone (hierarchical)? Many zones / separate
+#   buildings usually imply hierarchical.
+#
+# When done, call submit_object_data with object_structure, the zones array (each zone
+# with its composition fields), and panel_hierarchy. Still collect Phase 2 pre-object
+# criteria, maintenance, and comparison_set as usual.
+
 # EXAMPLES OF GOOD OPENING (Ukrainian)
 "Привіт! Я допоможу підібрати оптимальну систему пожежної сигналізації для вашого об'єкта. Звертаю увагу: цей розрахунок НЕ враховує вартість монтажних та пусконалагоджувальних робіт. Розкажіть, який саме об'єкт ви плануєте обладнати — житловий комплекс, офіс, склад, торговий центр?"
 
@@ -315,6 +350,85 @@ SUBMIT_TOOL = {
                 "description": "Manufacturers to compare",
             },
             
+            # ─── DETAILED MODE: object structure + zones ───
+            "object_structure": {
+                "type": "string",
+                "enum": ["single", "homogeneous_complex", "heterogeneous_complex"],
+                "default": "single",
+                "description": (
+                    "Object structure (detailed mode): 'single' = one homogeneous building, "
+                    "'homogeneous_complex' = several buildings of the same type, "
+                    "'heterogeneous_complex' = buildings of different purpose"
+                ),
+            },
+            "zones": {
+                "type": "array",
+                "description": (
+                    "DETAILED MODE ONLY. List of functional zones. Leave empty in quick mode. "
+                    "Each zone is a separate part of different purpose/floors. For a homogeneous "
+                    "complex, each physically separate building is its own zone."
+                ),
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string", "description": "Zone name, e.g. 'Hotel block'"},
+                        "purpose": {
+                            "type": "string",
+                            "enum": [
+                                "residential", "office", "hotel", "retail", "corridor",
+                                "parking", "kitchen", "boiler", "server", "warehouse",
+                                "industrial", "public", "technical", "other",
+                            ],
+                            "description": "Zone purpose — determines detector type",
+                        },
+                        "area_m2": {"type": "number", "minimum": 1},
+                        "floors": {"type": "integer", "minimum": 1, "default": 1},
+                        "height_m": {"type": "number", "description": "Height in m (for residential ≤26.5 rule)"},
+                        "fire_hazard_category_d": {
+                            "type": "boolean", "default": False,
+                            "description": "True if industrial/warehouse of fire-hazard category D",
+                        },
+                        "requires_automation": {
+                            "type": "boolean",
+                            "description": (
+                                "Whether this zone has fire automation. Per §4.0 rules some zones "
+                                "don't need it (residential ≤9 floors, category D, CC1 ≤200m²). "
+                                "Confirm with the client (hybrid approach)."
+                            ),
+                        },
+                        "subdivision_type": {
+                            "type": "string",
+                            "enum": ["open", "subdivided", "corridor_only"],
+                            "default": "subdivided",
+                            "description": "open = parking/hall; subdivided = rooms; corridor_only",
+                        },
+                        # Composition — engineering systems (Level 2)
+                        "smoke_dampers": {"type": "integer", "minimum": 0, "default": 0},
+                        "air_pressure_fans": {"type": "integer", "minimum": 0, "default": 0},
+                        "fire_dampers": {"type": "integer", "minimum": 0, "default": 0},
+                        "suppression_type": {
+                            "type": "string",
+                            "enum": ["none", "water", "gas", "powder", "aerosol"],
+                            "default": "none",
+                        },
+                        "fire_pumps": {"type": "integer", "minimum": 0, "default": 0},
+                        "elevators_fire_mode": {"type": "integer", "minimum": 0, "default": 0},
+                        "fire_doors_gates": {"type": "integer", "minimum": 0, "default": 0},
+                        "fire_hose_cabinets": {"type": "integer", "minimum": 0, "default": 0},
+                    },
+                    "required": ["name", "purpose", "area_m2"],
+                },
+            },
+            "panel_hierarchy": {
+                "type": "string",
+                "enum": ["single", "hierarchical"],
+                "default": "single",
+                "description": (
+                    "Level 3: 'single' = one panel for whole object, "
+                    "'hierarchical' = main panel + subordinate panels per zone"
+                ),
+            },
+            
             # ─── METADATA ───
             "additional_notes": {
                 "type": "string",
@@ -388,6 +502,7 @@ class AIAgent:
         self,
         history: list[ChatMessage],
         new_user_message: str,
+        mode: str = "quick",
     ) -> ChatResult:
         """
         Один цикл діалогу: користувач каже щось, AI відповідає або викликає tool.
@@ -395,6 +510,7 @@ class AIAgent:
         Args:
             history: попередні повідомлення (без нового)
             new_user_message: нове повідомлення користувача
+            mode: "quick" (швидка оцінка) або "detailed" (детальний аналіз із зонами)
         
         Returns:
             ChatResult з текстом відповіді або викликом tool
@@ -406,11 +522,26 @@ class AIAgent:
         ]
         messages.append({"role": "user", "content": new_user_message})
         
+        # Підказка режиму додається до системного промпту
+        if mode == "detailed":
+            system_prompt = SYSTEM_PROMPT + (
+                "\n\n# ACTIVE MODE: DETAILED ANALYSIS\n"
+                "The user chose detailed mode. Follow the three-level zone flow "
+                "(Level 1 structure → Level 2 per-zone composition with automation "
+                "filter → Level 3 panel hierarchy). Collect the zones array."
+            )
+        else:
+            system_prompt = SYSTEM_PROMPT + (
+                "\n\n# ACTIVE MODE: QUICK ESTIMATE\n"
+                "The user chose quick mode. Collect total area and basic parameters; "
+                "do NOT ask for a zone-by-zone breakdown. Leave the zones array empty."
+            )
+        
         try:
             response = self.client.messages.create(
                 model=self.model,
                 max_tokens=DEFAULT_MAX_TOKENS,
-                system=SYSTEM_PROMPT,
+                system=system_prompt,
                 tools=[SUBMIT_TOOL],
                 messages=messages,
             )
@@ -459,9 +590,10 @@ def build_state_from_tool_input(
         (object_state_dict, maintenance_params_dict_or_none)
     """
     from schemas.object_state import (
-        CertificationRequirement, FalseAlarmRequirement, Jurisdiction,
-        LifetimeHorizon, ObjectData, ObjectState, ObjectType,
-        PreObjectAnswers, TriState,
+        CertificationRequirement, FalseAlarmRequirement, FunctionalZone,
+        Jurisdiction, LifetimeHorizon, ObjectData, ObjectState, ObjectStructure,
+        ObjectType, PreObjectAnswers, SubdivisionType, SuppressionType,
+        TriState, ZoneComposition, ZonePurpose, automation_likely_not_required,
     )
     from engine.maintenance_calculator import MaintenanceParams, SystemComposition
     import uuid
@@ -500,11 +632,65 @@ def build_state_from_tool_input(
         ),
     )
     
+    # ─── Зони (детальний режим) ───
+    zones_dict = {}
+    zones_input = tool_input.get("zones", []) or []
+    for idx, z in enumerate(zones_input):
+        purpose = ZonePurpose(z.get("purpose", "other"))
+        area = float(z["area_m2"])
+        floors = int(z.get("floors", 1))
+        height = z.get("height_m")
+        cat_d = bool(z.get("fire_hazard_category_d", False))
+        
+        # Визначення потреби в автоматиці (§4.0, гібрид):
+        # якщо AI явно вказав requires_automation — беремо його;
+        # інакше застосовуємо правило-фільтр.
+        if z.get("requires_automation") is not None:
+            requires_auto = bool(z["requires_automation"])
+        else:
+            not_required, _ = automation_likely_not_required(
+                purpose, area, floors, height, cat_d
+            )
+            requires_auto = not not_required
+        
+        # Склад систем (composition) — лише якщо автоматика потрібна
+        composition = None
+        if requires_auto:
+            sup_raw = z.get("suppression_type", "none")
+            composition = ZoneComposition(
+                smoke_dampers=int(z.get("smoke_dampers", 0)),
+                air_pressure_fans=int(z.get("air_pressure_fans", 0)),
+                fire_dampers=int(z.get("fire_dampers", 0)),
+                suppression_type=SuppressionType(sup_raw),
+                fire_pumps=int(z.get("fire_pumps", 0)),
+                elevators_fire_mode=int(z.get("elevators_fire_mode", 0)),
+                fire_doors_gates=int(z.get("fire_doors_gates", 0)),
+                fire_hose_cabinets=int(z.get("fire_hose_cabinets", 0)),
+            )
+        
+        zone_key = z.get("name") or f"zone_{idx+1}"
+        try:
+            subdiv = SubdivisionType(z.get("subdivision_type", "subdivided"))
+        except ValueError:
+            subdiv = SubdivisionType.SUBDIVIDED
+        
+        zones_dict[zone_key] = FunctionalZone(
+            area_m2=area,
+            purpose=purpose,
+            floors=floors,
+            height_m=height,
+            requires_automation=requires_auto,
+            composition=composition,
+            subdivision_type=subdiv,
+        )
+    
     object_data = ObjectData(
         object_type=object_type,
+        object_structure=ObjectStructure(tool_input.get("object_structure", "single")),
         total_area_m2=float(tool_input["total_area_m2"]),
         floors_above=int(tool_input["floors_above"]),
         floors_below=int(tool_input.get("floors_below", 0)),
+        zones=zones_dict,
         additional_notes=tool_input.get("additional_notes", ""),
     )
     

@@ -132,6 +132,22 @@ class PreObjectAnswers(BaseModel):
 # ═══════════════════════════════════════════════════════════════════
 
 
+class ObjectStructure(str, Enum):
+    """Структура об'єкта (Рівень 1 опитування)"""
+    SINGLE = "single"  # однорідна будівля
+    HOMOGENEOUS_COMPLEX = "homogeneous_complex"  # комплекс однорідних будівель
+    HETEROGENEOUS_COMPLEX = "heterogeneous_complex"  # комплекс різнорідних будівель
+
+
+class SuppressionType(str, Enum):
+    """Тип системи пожежогасіння в зоні"""
+    NONE = "none"
+    WATER = "water"  # водяне (спринклерне/дренчерне)
+    GAS = "gas"  # газове
+    POWDER = "powder"  # порошкове
+    AEROSOL = "aerosol"  # аерозольне
+
+
 class SubdivisionType(str, Enum):
     """Тип розкладки приміщень у функціональній зоні (для розрахунку детекторів)"""
     OPEN = "open"  # відкритий простір — паркінг, цех, склад, торговий зал великий
@@ -139,19 +155,171 @@ class SubdivisionType(str, Enum):
     CORRIDOR_ONLY = "corridor_only"  # самі МЗК — сходові клітки, ліфтові холи, тех. коридори
 
 
+class ZonePurpose(str, Enum):
+    """Призначення зони — визначає тип детекторів і правила фільтра автоматики"""
+    RESIDENTIAL = "residential"  # житло
+    OFFICE = "office"  # офіси
+    HOTEL = "hotel"  # готельні номери
+    RETAIL = "retail"  # торгівля
+    CORRIDOR = "corridor"  # коридори, шляхи евакуації
+    PARKING = "parking"  # паркінг
+    KITCHEN = "kitchen"  # кухня, гарячий цех
+    BOILER = "boiler"  # котельня
+    SERVER = "server"  # серверна, електрощитова
+    WAREHOUSE = "warehouse"  # склад
+    INDUSTRIAL = "industrial"  # виробництво
+    PUBLIC = "public"  # громадське
+    TECHNICAL = "technical"  # технічні приміщення
+    OTHER = "other"
+
+
+# Призначення → тип детектора (правило, не питання). §3 специфікації.
+HEAT_DETECTOR_PURPOSES = {
+    ZonePurpose.PARKING, ZonePurpose.KITCHEN, ZonePurpose.BOILER,
+}
+SMOKE_ASPIRATING_PURPOSES = {ZonePurpose.SERVER}
+
+
+def automation_likely_not_required(
+    purpose: "ZonePurpose",
+    area_m2: float,
+    floors: int = 1,
+    height_m: Optional[float] = None,
+    fire_hazard_category_d: bool = False,
+) -> tuple[bool, str]:
+    """
+    Гібридний фільтр §4.0: визначає, чи протипожежна автоматика, ЯК ПРАВИЛО,
+    не потрібна для зони. Повертає (not_required, reasoning).
+    
+    Це РЕКОМЕНДАЦІЯ — рішення підтверджує замовник.
+    Три правила (розширювані):
+    1. Житло ≤ 26.5 м (≤ 9 поверхів)
+    2. Виробничі/складські категорії Д
+    3. Громадські CC1: окремо розташовані одноповерхові ≤ 200 м²
+    """
+    # Правило 1 — житло малої поверховості
+    if purpose == ZonePurpose.RESIDENTIAL:
+        h_ok = (height_m is not None and height_m <= 26.5) or (height_m is None and floors <= 9)
+        if h_ok:
+            return True, (
+                "Житлова забудова ≤ 26,5 м (≤ 9 поверхів) — як правило, "
+                "протипожежна автоматика не вимагається."
+            )
+    
+    # Правило 2 — категорія Д
+    if purpose in (ZonePurpose.INDUSTRIAL, ZonePurpose.WAREHOUSE) and fire_hazard_category_d:
+        return True, (
+            "Виробнича/складська зона категорії Д за вибухопожежною небезпекою — "
+            "автоматика, як правило, не потрібна."
+        )
+    
+    # Правило 3 — CC1 невеликі громадські
+    if purpose in (ZonePurpose.PUBLIC, ZonePurpose.RETAIL) and floors == 1 and area_m2 <= 200:
+        return True, (
+            "Окремо розташована одноповерхова громадська будівля ≤ 200 м² "
+            "(клас наслідків CC1) — автоматика, як правило, не потрібна."
+        )
+    
+    return False, "За типом і характеристиками зони протипожежна автоматика потрібна."
+
+
+def detector_type_for_purpose(purpose: "ZonePurpose") -> str:
+    """Тип детектора за призначенням зони (§3). Повертає 'heat' / 'smoke' / 'smoke_aspirating'."""
+    if purpose in HEAT_DETECTOR_PURPOSES:
+        return "heat"
+    if purpose in SMOKE_ASPIRATING_PURPOSES:
+        return "smoke_aspirating"
+    return "smoke"
+
+
+class ZoneComposition(BaseModel):
+    """
+    Склад протипожежних систем у зоні (Рівень 2 опитування).
+    Базовий блок (ПС+СОУЕ) + розширений (інженерія).
+    """
+    # Базовий блок (§4.1)
+    has_fire_alarm: bool = True  # ПС — пожежна сигналізація
+    has_soue: bool = True  # СОУЕ — оповіщення про евакуацію
+    
+    # Розширений блок — інженерія (§4.2)
+    smoke_dampers: int = Field(ge=0, default=0)  # клапани димовидалення
+    air_pressure_fans: int = Field(ge=0, default=0)  # підпір повітря (вентилятори)
+    fire_dampers: int = Field(ge=0, default=0)  # вогнезахисні клапани вентиляції
+    suppression_type: "SuppressionType" = Field(default=None)  # тип пожежогасіння
+    fire_pumps: int = Field(ge=0, default=0)  # насоси
+    elevators_fire_mode: int = Field(ge=0, default=0)  # ліфти
+    fire_doors_gates: int = Field(ge=0, default=0)  # протипожежні ворота/завіси
+    
+    # ВПВ (§4.3) — окремий випадок
+    fire_hose_cabinets: int = Field(ge=0, default=0)  # к-сть кран-комплектів
+    
+    def has_engineering(self) -> bool:
+        """Чи є хоч одна інженерна система (розширений блок)"""
+        sup = self.suppression_type not in (None, SuppressionType.NONE)
+        return any([
+            self.smoke_dampers, self.air_pressure_fans, self.fire_dampers,
+            sup, self.fire_pumps, self.elevators_fire_mode,
+            self.fire_doors_gates, self.fire_hose_cabinets,
+        ])
+    
+    def engineering_io_signals(self) -> tuple[int, int]:
+        """
+        Кількість I/O-сигналів від інженерії (входи, виходи).
+        Кожна керована система: 1 вихід (керування) + 1 вхід (статус/ЗЗ).
+        Пожежогасіння: пуск (вихід) + статус + блокування (2 входи).
+        ВПВ: на кран-комплект — 1 вихід (запуск насосів) + 3 входи
+             (димовидалення-кнопка, статус крана, СМК).
+        """
+        outputs = 0
+        inputs = 0
+        # Клапани димовидалення: керування + ЗЗ
+        outputs += self.smoke_dampers; inputs += self.smoke_dampers
+        # Підпір: керування + статус
+        outputs += self.air_pressure_fans; inputs += self.air_pressure_fans
+        # Вогнезахисні клапани: керування + ЗЗ
+        outputs += self.fire_dampers; inputs += self.fire_dampers
+        # Насоси: керування + статус(аварія)
+        outputs += self.fire_pumps; inputs += self.fire_pumps
+        # Ліфти: команда + статус
+        outputs += self.elevators_fire_mode; inputs += self.elevators_fire_mode
+        # Ворота/завіси: команда + статус положення
+        outputs += self.fire_doors_gates; inputs += self.fire_doors_gates
+        # Пожежогасіння: пуск + (статус + блокування)
+        if self.suppression_type not in (None, SuppressionType.NONE):
+            outputs += 1; inputs += 2
+        # ВПВ: на кран — запуск насосів(вихід) + 3 входи
+        outputs += self.fire_hose_cabinets
+        inputs += self.fire_hose_cabinets * 3
+        return inputs, outputs
+    
+    def requires_fire_resistant_cable(self) -> bool:
+        """Чи потрібен вогнестійкий кабель (будь-яка інженерія або ВПВ його вимагає)"""
+        return self.has_engineering()
+
+
 class FunctionalZone(BaseModel):
     """Одна функціональна зона об'єкта"""
     area_m2: float = Field(ge=0)
+    
+    # Призначення (Рівень 1) — визначає тип детекторів і фільтр автоматики
+    purpose: "ZonePurpose" = Field(default=None)
+    floors: int = Field(default=1, ge=1)  # поверховість зони
+    height_m: Optional[float] = Field(default=None, ge=0)  # висота (для фільтра житла ≤26.5м)
+    
+    # Чи потребує зона протипожежної автоматики взагалі (§4.0, гібридний фільтр)
+    # None = ще не визначено; True/False = підтверджено замовником
+    requires_automation: Optional[bool] = None
+    
+    # Склад систем у зоні (Рівень 2). Якщо requires_automation=False — ігнорується.
+    composition: Optional["ZoneComposition"] = None
     
     # Тип розкладки — визначає метод розрахунку детекторів
     subdivision_type: SubdivisionType = SubdivisionType.OPEN
     
     # Для subdivided: середній розмір окремого приміщення в м²
-    # (стандартна офісна кімната ~25, готельний номер ~20, бутік ТЦ ~30-50)
     avg_room_area_m2: Optional[float] = Field(default=None, ge=5, le=200)
     
     # Для subdivided: частка МЗК (коридори, санвузли) у зоні
-    # Зазвичай 15-25% для офісів, 20-30% для торгових центрів з бутіками
     common_areas_share: Optional[float] = Field(default=None, ge=0.0, le=0.5)
     
     # Для довідки (експлікація приміщень якщо відома)
@@ -245,6 +413,7 @@ class ObjectData(BaseModel):
     
     # Блок A — Базові параметри
     object_type: ObjectType
+    object_structure: "ObjectStructure" = Field(default=ObjectStructure.SINGLE)
     stage: ConstructionStage = ConstructionStage.NEW_CONSTRUCTION
     phases: int = Field(ge=1, default=1)
     total_area_m2: float = Field(gt=0)

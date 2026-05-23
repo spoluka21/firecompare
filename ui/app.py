@@ -282,6 +282,10 @@ with tab1:
     col3.metric(t("metric_mcp"), bom.manual_call_points_count)
     col4.metric(t("metric_sounders"), bom.sounders_count)
     
+    # Вогнестійкий кабель — окрема метрика (детальний режим з інженерією)
+    if getattr(bom, "fire_resistant_cable_m", 0) > 0:
+        st.metric(t("col_frc"), f"≈ {bom.fire_resistant_cable_m:,.0f} м")
+    
     st.markdown("---")
     
     if not result.comparison_table:

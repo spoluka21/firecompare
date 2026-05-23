@@ -21,6 +21,8 @@ def _init_session_state():
         st.session_state["ai_total_input_tokens"] = 0
     if "ai_total_output_tokens" not in st.session_state:
         st.session_state["ai_total_output_tokens"] = 0
+    if "ai_mode" not in st.session_state:
+        st.session_state["ai_mode"] = "quick"
 
 
 def _reset_chat():
@@ -29,6 +31,8 @@ def _reset_chat():
     st.session_state["ai_tool_input"] = None
     st.session_state["ai_total_input_tokens"] = 0
     st.session_state["ai_total_output_tokens"] = 0
+    # Режим розблоковується (можна обрати інший)
+    st.session_state["ai_mode"] = "quick"
 
 
 def _render_collected_params(tool_input: dict):
@@ -44,6 +48,33 @@ def _render_collected_params(tool_input: dict):
         above = tool_input.get("floors_above", "?")
         below = tool_input.get("floors_below", 0)
         st.markdown(f"**{t('obj_floors')}:** {above} + {below}")
+    
+    # Структура об'єкта + зони (детальний режим)
+    structure = tool_input.get("object_structure")
+    if structure and structure != "single":
+        st.markdown(f"**{t('obj_structure')}:** `{structure}`")
+    zones = tool_input.get("zones") or []
+    if zones:
+        with st.expander(f"{t('obj_zones')} ({len(zones)})", expanded=True):
+            for z in zones:
+                name = z.get("name", "—")
+                purpose = z.get("purpose", "")
+                area = z.get("area_m2", 0)
+                eng = []
+                if z.get("smoke_dampers"): eng.append(f"димовид.×{z['smoke_dampers']}")
+                if z.get("fire_dampers"): eng.append(f"вогнезах.клап.×{z['fire_dampers']}")
+                if z.get("air_pressure_fans"): eng.append(f"підпір×{z['air_pressure_fans']}")
+                if z.get("suppression_type", "none") != "none":
+                    eng.append(f"пожежогас.({z['suppression_type']})")
+                if z.get("fire_pumps"): eng.append(f"насоси×{z['fire_pumps']}")
+                if z.get("elevators_fire_mode"): eng.append(f"ліфти×{z['elevators_fire_mode']}")
+                if z.get("fire_doors_gates"): eng.append(f"ворота×{z['fire_doors_gates']}")
+                if z.get("fire_hose_cabinets"): eng.append(f"ВПВ×{z['fire_hose_cabinets']}")
+                eng_str = (", " + ", ".join(eng)) if eng else ""
+                st.markdown(f"• **{name}** ({purpose}, {area:,.0f} м²{eng_str})")
+    if tool_input.get("panel_hierarchy") == "hierarchical":
+        st.markdown(f"**{t('obj_hierarchy')}:** {t('obj_hierarchy_yes')}")
+    
     if "jurisdictions" in tool_input:
         st.markdown(
             f"**{t('obj_jurisdictions')}:** {', '.join(tool_input['jurisdictions'])}"
@@ -107,6 +138,32 @@ def render_ai_tab(catalog):
             "На Streamlit Cloud: налаштування → Secrets → додайте той самий рядок."
         )
         return
+    
+    # Перемикач режиму (можна змінити лише до початку діалогу)
+    chat_started = bool(st.session_state["ai_messages"])
+    mode_options = {
+        "quick": t("ai_mode_quick"),
+        "detailed": t("ai_mode_detailed"),
+    }
+    selected_label = st.radio(
+        t("ai_mode_label"),
+        options=list(mode_options.values()),
+        index=0 if st.session_state["ai_mode"] == "quick" else 1,
+        horizontal=True,
+        disabled=chat_started,
+        key="ai_mode_radio",
+    )
+    # Зворотний мапінг label → ключ
+    st.session_state["ai_mode"] = next(
+        k for k, v in mode_options.items() if v == selected_label
+    )
+    if chat_started:
+        st.caption(t("ai_mode_locked"))
+    else:
+        st.caption(
+            t("ai_mode_detailed_hint") if st.session_state["ai_mode"] == "detailed"
+            else t("ai_mode_quick_hint")
+        )
     
     # Колонки: чат | зібрані параметри
     col_chat, col_params = st.columns([2, 1])
@@ -177,6 +234,7 @@ def _process_user_input(user_input: str, agent: AIAgent):
         result = agent.chat(
             history=history_without_last,
             new_user_message=user_input,
+            mode=st.session_state.get("ai_mode", "quick"),
         )
     
     # Обробка помилки

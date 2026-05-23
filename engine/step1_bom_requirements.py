@@ -80,6 +80,7 @@ class BOMRequirements(BaseModel):
     
     # Розрахункові внутрішні
     total_detection_area_m2: float = Field(ge=0)
+    fire_resistant_cable_m: float = Field(ge=0, default=0.0)  # метраж вогнестійкого кабелю
     notes: list[str] = Field(default_factory=list)
     
     def total_loop_devices(self) -> int:
@@ -126,11 +127,16 @@ def calculate_detectors_for_zone(
     
     - CORRIDOR_ONLY: тільки МЗК → N = ceil(площа / S₀)
     """
-    from schemas.object_state import SubdivisionType
+    from schemas.object_state import SubdivisionType, detector_type_for_purpose
     
-    # Тип детектора визначаємо за зоною
-    heat_only_zones = {"underground_parking", "aboveground_parking", "kitchen"}
-    is_heat = zone_name in heat_only_zones
+    # Тип детектора: пріоритет — поле purpose зони; запасний — назва ключа
+    is_heat = False
+    if getattr(zone_data, "purpose", None) is not None:
+        dtype = detector_type_for_purpose(zone_data.purpose)
+        is_heat = (dtype == "heat")
+    else:
+        heat_only_zones = {"underground_parking", "aboveground_parking", "kitchen", "boiler"}
+        is_heat = zone_name in heat_only_zones
     
     if zone_data.subdivision_type == SubdivisionType.OPEN:
         # Відкритий простір — пряма формула N = ceil(площа / S₀)
@@ -182,13 +188,36 @@ def calculate_detectors(object_data: ObjectData) -> tuple[int, int, float, list[
     Загальний розрахунок детекторів за всіма зонами об'єкта.
     
     Повертає: (smoke_total, heat_total, total_area_m2, notes)
+    
+    ВАЖЛИВО: якщо зони не задані (наприклад, об'єкт заведено через AI-агента
+    лише із загальною площею), створюємо синтетичну зону з усієї площі, щоб
+    уникнути нульового розрахунку детекторів. Це груба, але реалістична оцінка
+    для етапу порівняння (усереднені приміщення ~25 м², 20% МЗК).
     """
+    from schemas.object_state import FunctionalZone, SubdivisionType
+    
+    zones = object_data.zones
+    
+    # Fallback: немає зон → синтетична зона з total_area_m2
+    if not zones and object_data.total_area_m2 > 0:
+        synthetic = FunctionalZone(
+            area_m2=object_data.total_area_m2,
+            subdivision_type=SubdivisionType.SUBDIVIDED,
+            avg_room_area_m2=25.0,
+            common_areas_share=0.20,
+        )
+        zones = {"object_total": synthetic}
+    
     total_smoke = 0
     total_heat = 0
     total_area = 0.0
     notes = []
     
-    for zone_name, zone_data in object_data.zones.items():
+    for zone_name, zone_data in zones.items():
+        # Якщо зона явно не потребує автоматики — пропускаємо (§4.0)
+        if getattr(zone_data, "requires_automation", None) is False:
+            notes.append(f"{zone_name}: автоматика не передбачена — детектори не рахуються")
+            continue
         smoke, heat, note = calculate_detectors_for_zone(zone_name, zone_data)
         total_smoke += smoke
         total_heat += heat
@@ -290,6 +319,57 @@ def calculate_io_signals(object_data: ObjectData) -> tuple[int, int, list[str]]:
     return inputs, outputs, notes
 
 
+def calculate_zonal_engineering(object_data: ObjectData) -> dict:
+    """
+    Агрегує інженерію з ZoneComposition усіх зон (повний Рівень 2).
+    
+    Підсумовує I/O-сигнали і метраж вогнестійкого кабелю по зонах, що мають
+    composition з інженерними системами. Доповнює object-рівневу
+    executive_automation (вони не конфліктують: зональна — детальний режим,
+    object-рівнева — швидкий/застарілий).
+    
+    Повертає dict: inputs, outputs, fire_resistant_cable_m, notes.
+    
+    Метраж вогнестійкого кабелю: орієнтовно (§9 рішення 3) —
+    к-сть I/O-сигналів інженерії × середня довжина траси.
+    """
+    AVG_FRC_RUN_M = 35.0  # середня довжина однієї вогнестійкої траси, м
+    
+    inputs = 0
+    outputs = 0
+    frc_meters = 0.0
+    notes = []
+    
+    for zone_name, zone_data in object_data.zones.items():
+        comp = getattr(zone_data, "composition", None)
+        if comp is None:
+            continue
+        if getattr(zone_data, "requires_automation", None) is False:
+            continue
+        if not comp.has_engineering():
+            continue
+        
+        z_in, z_out = comp.engineering_io_signals()
+        inputs += z_in
+        outputs += z_out
+        
+        # Вогнестійкий кабель — на кожен інженерний сигнал
+        zone_frc = (z_in + z_out) * AVG_FRC_RUN_M
+        frc_meters += zone_frc
+        
+        notes.append(
+            f"{zone_name}: інженерія {z_in} вх + {z_out} вих, "
+            f"вогнестійкий кабель ≈ {zone_frc:.0f} м"
+        )
+    
+    return {
+        "inputs": inputs,
+        "outputs": outputs,
+        "fire_resistant_cable_m": round(frc_meters, 1),
+        "notes": notes,
+    }
+
+
 # ═══════════════════════════════════════════════════════════════════
 # КРОК 1.3. КНОПКИ MCP І ОПОВІЩУВАЧІ
 # ═══════════════════════════════════════════════════════════════════
@@ -340,8 +420,16 @@ def compute_bom_requirements(state: ObjectState) -> BOMRequirements:
     # 1.1 Детектори
     smoke, heat, area, det_notes = calculate_detectors(obj)
     
-    # 1.2 I/O сигнали
+    # 1.2 I/O сигнали (object-рівнева executive_automation)
     inputs, outputs, io_notes = calculate_io_signals(obj)
+    
+    # 1.2b Зональна інженерія (детальний режим) — додає I/O і вогнестійкий кабель
+    zonal = calculate_zonal_engineering(obj)
+    inputs += zonal["inputs"]
+    outputs += zonal["outputs"]
+    frc_m = zonal["fire_resistant_cable_m"]
+    if zonal["notes"]:
+        io_notes = io_notes + ["--- зональна інженерія ---"] + zonal["notes"]
     
     # 1.3 MCP
     mcp_count = calculate_mcp_count(obj)
@@ -361,6 +449,9 @@ def compute_bom_requirements(state: ObjectState) -> BOMRequirements:
             (" (зі стробами)" if strobe else ""),
         ]
     )
+    if frc_m > 0:
+        all_notes.append(f"=== ВОГНЕСТІЙКИЙ КАБЕЛЬ ===")
+        all_notes.append(f"Орієнтовний метраж: ≈ {frc_m:.0f} м (інженерія + ВПВ)")
     
     return BOMRequirements(
         smoke_detectors_count=smoke,
@@ -371,5 +462,6 @@ def compute_bom_requirements(state: ObjectState) -> BOMRequirements:
         sounders_count=sounder_count,
         sounders_need_strobe=strobe,
         total_detection_area_m2=area,
+        fire_resistant_cable_m=frc_m,
         notes=all_notes,
     )
