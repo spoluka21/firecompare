@@ -218,9 +218,9 @@ def display_name(mfr_id: str, fallback: str = "") -> str:
 # ВКЛАДКИ
 # ═══════════════════════════════════════════════════════════════════
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    t("tab1_label"), t("tab2_label"), t("tab3_label"),
-    t("tab4_label"), t("tab5_label"),
+tab5, tab1, tab2, tab3, tab4 = st.tabs([
+    t("tab5_label"), t("tab1_label"), t("tab2_label"),
+    t("tab3_label"), t("tab4_label"),
 ])
 
 if run_button:

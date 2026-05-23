@@ -92,6 +92,11 @@ def render_ai_tab(catalog):
     st.markdown(f"### {t('ai_header')}")
     st.caption(t("ai_caption"))
     
+    # Повідомлення про успішний розрахунок (після rerun)
+    if st.session_state.get("ai_just_calculated"):
+        st.success(t("ai_calc_done"))
+        st.session_state["ai_just_calculated"] = False
+    
     # Перевірка ключа
     agent = AIAgent()
     if not agent.is_available():
@@ -222,8 +227,13 @@ def _run_calculation_from_ai(catalog):
         # Зберігаємо об'єкт у список останніх (для sidebar), тримаємо останні 2
         _save_recent_object(state, tool_input)
         
-        st.success(t("ai_calc_done"))
-        st.balloons()
+        # Прапорець, щоб показати повідомлення про успіх після rerun
+        st.session_state["ai_just_calculated"] = True
+        
+        # КРИТИЧНО: перезапускаємо скрипт, щоб вкладки Mode 1-4 відрендерилися
+        # з реальними даними (включно з ТО по кожному виробнику).
+        # Без rerun вкладки залишаться на стані «спочатку запустіть розрахунок».
+        st.rerun()
     except Exception as e:
         st.error(f"{t('ai_error')}: {e}")
 

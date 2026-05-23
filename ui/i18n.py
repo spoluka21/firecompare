@@ -390,11 +390,17 @@ TRANSLATIONS = {
     "ai_caption": {
         "ua": (
             "Опишіть ваш об'єкт у вільній формі — AI задасть уточнюючі питання "
-            "і автоматично заповнить параметри для розрахунку."
+            "і автоматично заповнить параметри для розрахунку. "
+            "**Важливо:** інструмент виконує порівняльний розрахунок за вказаними "
+            "вами параметрами, а не визначає необхідний склад системи та не враховує "
+            "вартість монтажних і пусконалагоджувальних робіт."
         ),
         "en": (
             "Describe your object in natural language — the AI will ask "
-            "clarifying questions and auto-fill parameters for calculation."
+            "clarifying questions and auto-fill parameters for calculation. "
+            "**Note:** the tool performs a comparative calculation based on the "
+            "parameters you provide; it does not determine the required system "
+            "composition and does not include installation/commissioning costs."
         ),
     },
     "ai_no_key_warning": {
