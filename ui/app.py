@@ -218,52 +218,102 @@ def display_name(mfr_id: str, fallback: str = "") -> str:
 # ВКЛАДКИ
 # ═══════════════════════════════════════════════════════════════════
 
-tab5, tab1, tab2, tab3, tab4 = st.tabs([
-    t("tab5_label"), t("tab1_label"), t("tab2_label"),
-    t("tab3_label"), t("tab4_label"),
-])
+# ═══════════════════════════════════════════════════════════════════
+# НАВІГАЦІЯ (власна, замість st.tabs — дозволяє програмне перемикання
+# та дублювання навігації вгорі/внизу сторінки)
+# ═══════════════════════════════════════════════════════════════════
 
+# Порядок вкладок: AI перший, далі Mode 1-4
+_TAB_ORDER = ["ai", "mode1", "mode2", "mode3", "mode4"]
+_TAB_LABELS = {
+    "ai": t("tab5_label"),
+    "mode1": t("tab1_label"),
+    "mode2": t("tab2_label"),
+    "mode3": t("tab3_label"),
+    "mode4": t("tab4_label"),
+}
+
+if "active_tab" not in st.session_state:
+    st.session_state["active_tab"] = "ai"
+
+
+def render_nav(location: str):
+    """Малює рядок навігаційних кнопок. location — унікальний префікс ('top'/'bottom')."""
+    cols = st.columns(len(_TAB_ORDER))
+    for i, tid in enumerate(_TAB_ORDER):
+        is_active = st.session_state["active_tab"] == tid
+        if cols[i].button(
+            _TAB_LABELS[tid],
+            key=f"nav_{location}_{tid}",
+            use_container_width=True,
+            type="primary" if is_active else "secondary",
+        ):
+            st.session_state["active_tab"] = tid
+            st.rerun()
+
+
+# Розрахунок за кнопкою sidebar
 if run_button:
     with st.spinner(t("calculating_spinner")):
         result = run_calculation(state, CATALOG)
         st.session_state["last_result"] = result
         st.session_state["last_state"] = state
-        # Очищуємо mode2 при новому розрахунку
         if "mode2_result" in st.session_state:
             del st.session_state["mode2_result"]
+    # Автоперехід на Mode 1 з результатами
+    st.session_state["active_tab"] = "mode1"
+    st.rerun()
 
-# Якщо ще не було розрахунку — у tab 1-3 показуємо info, але Mode 4 і Mode 5 доступні завжди
-if "last_result" not in st.session_state:
-    with tab1:
-        st.info(t("configure_and_run"))
-    with tab2:
-        st.info(t("run_first"))
-    with tab3:
-        st.info(t("run_first"))
-    # Tab 4 — standalone-калькулятор завжди працює
-    with tab4:
-        from ui.maintenance_ui import render_mode4_tab
-        render_mode4_tab(
-            result=None,
-            state=state,
-            catalog=CATALOG,
-            display_name_func=display_name,
-        )
-    # Tab 5 — AI-помічник завжди доступний
-    with tab5:
-        from ui.ai_agent_ui import render_ai_tab
-        render_ai_tab(catalog=CATALOG)
+# Навігація вгорі
+render_nav("top")
+st.markdown("---")
+
+_active = st.session_state["active_tab"]
+_has_result = "last_result" in st.session_state
+
+
+def _render_bottom_nav():
+    """Дубльована навігація внизу сторінки."""
+    st.markdown("---")
+    st.caption(t("nav_bottom_hint"))
+    render_nav("bottom")
+
+
+# ═══════════════════════════════════════════════════════════════════
+# ДИСПЕТЧЕР ВКЛАДОК
+# ═══════════════════════════════════════════════════════════════════
+
+# AI-помічник — завжди доступний
+if _active == "ai":
+    from ui.ai_agent_ui import render_ai_tab
+    render_ai_tab(catalog=CATALOG)
+    _render_bottom_nav()
+    st.stop()
+
+# Mode 4 — standalone-калькулятор завжди працює (навіть без розрахунку)
+if _active == "mode4" and not _has_result:
+    from ui.maintenance_ui import render_mode4_tab
+    render_mode4_tab(result=None, state=state, catalog=CATALOG, display_name_func=display_name)
+    _render_bottom_nav()
+    st.stop()
+
+# Mode 1-3 потребують розрахунку
+if not _has_result:
+    if _active in ("mode1", "mode2", "mode3"):
+        st.info(t("configure_and_run") if _active == "mode1" else t("run_first"))
+    _render_bottom_nav()
     st.stop()
 
 result = st.session_state["last_result"]
 state = st.session_state["last_state"]
 
 
+
 # ═══════════════════════════════════════════════════════════════════
 # TAB 1: MODE 1
 # ═══════════════════════════════════════════════════════════════════
 
-with tab1:
+if _active == "mode1":
     st.markdown(f"### {t('calc_result_header')}")
     mode_text = t("mode_npa") if result.is_multi_panel_mode else t("mode_simple")
     st.caption(
@@ -421,7 +471,7 @@ with tab1:
 # TAB 2: MODE 2
 # ═══════════════════════════════════════════════════════════════════
 
-with tab2:
+if _active == "mode2":
     st.markdown(f"### {t('mode2_header')}")
     st.caption(t("mode2_caption"))
     
@@ -489,7 +539,7 @@ with tab2:
 # TAB 3: MODE 3
 # ═══════════════════════════════════════════════════════════════════
 
-with tab3:
+if _active == "mode3":
     st.markdown(f"### {t('mode3_header')}")
     st.caption(t("mode3_caption"))
     
@@ -561,7 +611,7 @@ with tab3:
 # TAB 4: MAINTENANCE
 # ═══════════════════════════════════════════════════════════════════
 
-with tab4:
+if _active == "mode4":
     from ui.maintenance_ui import render_mode4_tab
     render_mode4_tab(
         result=result if "last_result" in st.session_state else None,
@@ -571,10 +621,5 @@ with tab4:
     )
 
 
-# ═══════════════════════════════════════════════════════════════════
-# TAB 5: AI ASSISTANT
-# ═══════════════════════════════════════════════════════════════════
-
-with tab5:
-    from ui.ai_agent_ui import render_ai_tab
-    render_ai_tab(catalog=CATALOG)
+# Навігація внизу сторінки (дубльована) — для всіх вкладок з результатом
+_render_bottom_nav()

@@ -383,6 +383,7 @@ TRANSLATIONS = {
     
     # ── Tab 5: AI Assistant ──
     "tab5_label": {"ua": "🤖 AI помічник", "en": "🤖 AI assistant"},
+    "nav_bottom_hint": {"ua": "Навігація:", "en": "Navigation:"},
     "ai_header": {
         "ua": "🤖 AI помічник для збору параметрів",
         "en": "🤖 AI assistant for parameter collection",
