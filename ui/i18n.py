@@ -447,6 +447,14 @@ TRANSLATIONS = {
         "ua": "✅ Розрахунок виконано! Перейдіть на вкладку **«📊 Mode 1: Порівняння»** вгорі сторінки, щоб побачити результати (а також Mode 2, 3, 4).",
         "en": "✅ Calculation complete! Switch to the **«📊 Mode 1: Comparison»** tab at the top to see results (also Mode 2, 3, 4).",
     },
+    "ai_result_ready": {
+        "ua": "✅ Розрахунок виконано — попередні результати нижче:",
+        "en": "✅ Calculation complete — preview below:",
+    },
+    "ai_result_see_tabs": {
+        "ua": "Повні результати, графіки та звіти — у вкладках 📊 Mode 1–4 угорі сторінки.",
+        "en": "Full results, charts and reports — in tabs 📊 Mode 1–4 at the top of the page.",
+    },
     "ai_error": {"ua": "Помилка", "en": "Error"},
     "ai_token_usage": {"ua": "Токенів", "en": "Tokens"},
     

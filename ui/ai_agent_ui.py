@@ -117,6 +117,32 @@ def _render_collected_params(tool_input: dict):
                 st.markdown(f"**{t('mnt_composition')}:** " + ", ".join(mnt_items))
 
 
+def _render_result_summary(result):
+    """
+    Стійкий підсумок результату прямо у вкладці AI.
+    Надійна заміна скролу/переключення вкладки (їх Streamlit не підтримує).
+    """
+    table = getattr(result, "comparison_table", None)
+    if not table:
+        return
+    
+    with st.container():
+        st.success(t("ai_result_ready"))
+        # Топ-3 коротко
+        medals = ["🥇", "🥈", "🥉"]
+        lines = []
+        for i, row in enumerate(table[:3]):
+            medal = medals[i] if i < 3 else "•"
+            name = row.get("manufacturer_name", "?")
+            capex = row.get("capex_uah", 0)
+            overall = row.get("overall_score", None)
+            score_s = f" — {overall:.0f}/100" if overall is not None else ""
+            lines.append(f"{medal} **{name}** — CAPEX {capex:,.0f} ₴{score_s}")
+        st.markdown("\n\n".join(lines))
+        st.caption(t("ai_result_see_tabs"))
+    st.markdown("---")
+
+
 def render_ai_tab(catalog):
     """Головна функція рендерингу вкладки AI"""
     _init_session_state()
@@ -124,16 +150,10 @@ def render_ai_tab(catalog):
     st.markdown(f"### {t('ai_header')}")
     st.caption(t("ai_caption"))
     
-    # Повідомлення про успішний розрахунок (після rerun)
-    if st.session_state.get("ai_just_calculated"):
-        # Скрол сторінки наверх, щоб користувач побачив вкладки з результатами
-        components.html(
-            "<script>window.parent.document.querySelector('section.main')"
-            "?.scrollTo({top:0,behavior:'smooth'});</script>",
-            height=0,
-        )
-        st.success(t("ai_calc_done"))
-        st.session_state["ai_just_calculated"] = False
+    # Стійкий підсумок результату прямо у вкладці AI (надійніше за скрол/переключення
+    # вкладки, які Streamlit не підтримує). Показується, поки є розрахунок.
+    if st.session_state.get("last_result") and st.session_state.get("ai_tool_input"):
+        _render_result_summary(st.session_state["last_result"])
     
     # Перевірка ключа
     agent = AIAgent()
@@ -301,12 +321,7 @@ def _run_calculation_from_ai(catalog):
         # Зберігаємо об'єкт у список останніх (для sidebar), тримаємо останні 2
         _save_recent_object(state, tool_input)
         
-        # Прапорець, щоб показати повідомлення про успіх після rerun
-        st.session_state["ai_just_calculated"] = True
-        
-        # КРИТИЧНО: перезапускаємо скрипт, щоб вкладки Mode 1-4 відрендерилися
-        # з реальними даними (включно з ТО по кожному виробнику).
-        # Без rerun вкладки залишаться на стані «спочатку запустіть розрахунок».
+        # Перезапуск, щоб вкладки Mode 1-4 і підсумок у AI-вкладці відрендерилися з даними
         st.rerun()
     except Exception as e:
         st.error(f"{t('ai_error')}: {e}")
