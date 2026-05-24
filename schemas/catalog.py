@@ -178,8 +178,17 @@ class Panel(BaseModel):
     
     # КРИТИЧНО для розрахунку
     max_loops: int = Field(ge=1, description="Максимальна кількість петель")
-    devices_per_loop: int = Field(ge=1, description="Максимум пристроїв на петлю")
+    devices_per_loop: int = Field(ge=1, description="Максимум адресних пристроїв (детекторів) на петлю")
     max_total_devices: int = Field(ge=1)
+    
+    # Релейні (інженерні) пристрої — окреме обмеження, на вогнестійких шлейфах.
+    # relay_limit_scope визначає, як трактувати relay_devices_limit:
+    #   "per_loop"  — обмеження на КОЖНУ петлю (Rubí, Quartz, Zafir, Onyx тощо)
+    #   "per_panel" — обмеження на ВЕСЬ прилад (Cofem Lyon Remote: релейні не множать шлейфи)
+    # Якщо None — релейних даних немає, застосовується консервативна оцінка
+    # (релейні займають загальну ємність devices_per_loop).
+    relay_devices_limit: Optional[int] = Field(default=None, ge=0)
+    relay_limit_scope: Optional[str] = Field(default=None)  # "per_loop" | "per_panel" | None
     
     # Експлуатаційні
     polling_time_ms: Optional[int] = None

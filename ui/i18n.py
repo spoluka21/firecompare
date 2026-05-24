@@ -477,6 +477,14 @@ TRANSLATIONS = {
     "obj_hierarchy": {"ua": "Архітектура ППКП", "en": "Panel architecture"},
     "obj_hierarchy_yes": {"ua": "ієрархічна", "en": "hierarchical"},
     "col_frc": {"ua": "Вогнестійкий кабель (м)", "en": "Fire-resistant cable (m)"},
+    "quick_estimate_notice": {
+        "ua": "⚡ Швидка оцінка: уточнено лише конфігурацію СПЗ, решта критеріїв "
+              "(сертифікація, горизонт, хибні спрацювання тощо) узята за усередненими "
+              "стандартними значеннями. Для точного аналізу скористайтесь детальним режимом.",
+        "en": "⚡ Quick estimate: only the FAS configuration was specified; the remaining "
+              "criteria (certification, horizon, false alarms, etc.) use averaged standard "
+              "values. For a precise analysis, use detailed mode.",
+    },
     
     # ── Excluded manufacturers (#4) ──
     "excluded_intro": {

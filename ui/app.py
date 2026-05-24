@@ -272,6 +272,10 @@ with tab1:
         f"{t('engine_label')}: v{result.engine_version}"
     )
     
+    # Банер про усереднені значення, якщо розрахунок зроблено у швидкому режимі
+    if st.session_state.get("ai_mode") == "quick" and st.session_state.get("last_result"):
+        st.info(t("quick_estimate_notice"))
+    
     col1, col2, col3, col4 = st.columns(4)
     bom = result.total_bom
     col1.metric(t("metric_detectors"),
