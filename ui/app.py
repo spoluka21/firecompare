@@ -319,6 +319,16 @@ with tab1:
         df = pd.DataFrame(rows)
         st.dataframe(df, use_container_width=True, hide_index=True)
         
+        # Повідомлення про виключених виробників (#4)
+        excluded = [r for r in result.manufacturer_results if r.excluded]
+        if excluded:
+            with st.container():
+                st.info(t("excluded_intro").format(n=len(excluded)))
+                for r in excluded:
+                    reason = getattr(r, "exclusion_reason", None) or t("excluded_generic")
+                    name = display_name(r.manufacturer_id, r.manufacturer_name)
+                    st.markdown(f"❌ **{name}** — {reason}")
+        
         feasible = [r for r in result.manufacturer_results 
                    if not r.excluded and r.scores and r.scores.applied_weights]
         if feasible:
@@ -331,6 +341,10 @@ with tab1:
                 f"{t('weight_oper')}={w.get('layer_4_operational', 0)*100:.0f}% • "
                 f"{t('weight_tco')}={w.get('layer_5_tco', 0)*100:.0f}%"
             )
+        
+        # Пояснення критеріїв оцінювання (#5)
+        with st.expander(t("criteria_help_title"), expanded=False):
+            st.markdown(t("criteria_help_body"))
         
         if result.warnings:
             for w in result.warnings:

@@ -4,6 +4,7 @@ UI модуль для Tab 5: AI Assistant (чат з Claude)
 Викликається з ui/app.py. Окремий модуль для чистоти архітектури.
 """
 import streamlit as st
+import streamlit.components.v1 as components
 
 from engine.ai_agent import (
     AIAgent, ChatMessage, build_state_from_tool_input,
@@ -125,6 +126,12 @@ def render_ai_tab(catalog):
     
     # Повідомлення про успішний розрахунок (після rerun)
     if st.session_state.get("ai_just_calculated"):
+        # Скрол сторінки наверх, щоб користувач побачив вкладки з результатами
+        components.html(
+            "<script>window.parent.document.querySelector('section.main')"
+            "?.scrollTo({top:0,behavior:'smooth'});</script>",
+            height=0,
+        )
         st.success(t("ai_calc_done"))
         st.session_state["ai_just_calculated"] = False
     
@@ -139,29 +146,38 @@ def render_ai_tab(catalog):
         )
         return
     
-    # Перемикач режиму (можна змінити лише до початку діалогу)
+    # Перемикач режиму — дві помітні кнопки (можна змінити лише до початку діалогу)
     chat_started = bool(st.session_state["ai_messages"])
-    mode_options = {
-        "quick": t("ai_mode_quick"),
-        "detailed": t("ai_mode_detailed"),
-    }
-    selected_label = st.radio(
-        t("ai_mode_label"),
-        options=list(mode_options.values()),
-        index=0 if st.session_state["ai_mode"] == "quick" else 1,
-        horizontal=True,
-        disabled=chat_started,
-        key="ai_mode_radio",
-    )
-    # Зворотний мапінг label → ключ
-    st.session_state["ai_mode"] = next(
-        k for k, v in mode_options.items() if v == selected_label
-    )
+    current_mode = st.session_state["ai_mode"]
+    
+    st.markdown(f"**{t('ai_mode_label')}**")
+    mc1, mc2 = st.columns(2)
+    with mc1:
+        if st.button(
+            f"⚡ {t('ai_mode_quick')}",
+            use_container_width=True,
+            disabled=chat_started,
+            type="primary" if current_mode == "quick" else "secondary",
+            key="ai_mode_btn_quick",
+        ):
+            st.session_state["ai_mode"] = "quick"
+            st.rerun()
+    with mc2:
+        if st.button(
+            f"🔬 {t('ai_mode_detailed')}",
+            use_container_width=True,
+            disabled=chat_started,
+            type="primary" if current_mode == "detailed" else "secondary",
+            key="ai_mode_btn_detailed",
+        ):
+            st.session_state["ai_mode"] = "detailed"
+            st.rerun()
+    
     if chat_started:
         st.caption(t("ai_mode_locked"))
     else:
         st.caption(
-            t("ai_mode_detailed_hint") if st.session_state["ai_mode"] == "detailed"
+            t("ai_mode_detailed_hint") if current_mode == "detailed"
             else t("ai_mode_quick_hint")
         )
     

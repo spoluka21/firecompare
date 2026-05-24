@@ -444,8 +444,8 @@ TRANSLATIONS = {
         "en": "🚀 Run calculation",
     },
     "ai_calc_done": {
-        "ua": "✅ Розрахунок виконано. Дивіться вкладки Mode 1, 2, 3, 4.",
-        "en": "✅ Calculation complete. See Mode 1, 2, 3, 4 tabs.",
+        "ua": "✅ Розрахунок виконано! Перейдіть на вкладку **«📊 Mode 1: Порівняння»** вгорі сторінки, щоб побачити результати (а також Mode 2, 3, 4).",
+        "en": "✅ Calculation complete! Switch to the **«📊 Mode 1: Comparison»** tab at the top to see results (also Mode 2, 3, 4).",
     },
     "ai_error": {"ua": "Помилка", "en": "Error"},
     "ai_token_usage": {"ua": "Токенів", "en": "Tokens"},
@@ -477,6 +477,54 @@ TRANSLATIONS = {
     "obj_hierarchy": {"ua": "Архітектура ППКП", "en": "Panel architecture"},
     "obj_hierarchy_yes": {"ua": "ієрархічна", "en": "hierarchical"},
     "col_frc": {"ua": "Вогнестійкий кабель (м)", "en": "Fire-resistant cable (m)"},
+    
+    # ── Excluded manufacturers (#4) ──
+    "excluded_intro": {
+        "ua": "ℹ️ {n} виробник(ів) виключено з порівняння. Причини:",
+        "en": "ℹ️ {n} manufacturer(s) excluded from comparison. Reasons:",
+    },
+    "excluded_generic": {
+        "ua": "не відповідає вимогам об'єкта",
+        "en": "does not meet object requirements",
+    },
+    
+    # ── Criteria explanation (#5) ──
+    "criteria_help_title": {
+        "ua": "❓ Як читати результати — пояснення критеріїв",
+        "en": "❓ How to read the results — criteria explanation",
+    },
+    "criteria_help_body": {
+        "ua": """**Як побудоване порівняння**
+
+Кожен виробник оцінюється за 5 незалежними шарами (L1–L5). Кожен шар дає бал 0–100, де 100 — найкращий результат у вашому наборі порівняння. Підсумковий бал **OVERALL** — це зважена сума шарів (ваги адаптуються під ваші пріоритети, показані під таблицею).
+
+**L1 — CAPEX (капітальні витрати).** Порівнює загальну вартість обладнання. 100 балів отримує найдешевший варіант; решта — пропорційно менше залежно від того, наскільки вони дорожчі.
+
+**L2 — Архітектурна ефективність.** Наскільки раціонально використовується адресний простір системи: скільки логічних сигналів припадає на одну зайняту адресу. Вищий бал — менше «зайвих» адрес, кращий запас для розширення.
+
+**L3 — Функціональність.** Відповідність функцій системи вашим вимогам (мобільний застосунок, хмарний моніторинг, інтеграція з іншими системами тощо). Враховується лише якщо ви вказали такі вимоги.
+
+**L4 — Експлуатаційні якості.** Надійність, захист від хибних спрацювань, резерв ліній, зручність обслуговування.
+
+**L5 — TCO (сукупна вартість володіння).** Витрати за весь термін експлуатації: обладнання + обслуговування + заміни. Враховує обраний горизонт (короткий/середній/довгий).
+
+**Як читати таблицю.** 🥇🥈🥉 — місця за підсумковим балом. Колонка CAPEX — стартова вартість обладнання. «ТО/міс» — щомісячне обслуговування. Найкращий за OVERALL не завжди найдешевший за CAPEX: дорожчий старт може окупитися нижчим обслуговуванням за весь термін.""",
+        "en": """**How the comparison works**
+
+Each manufacturer is scored across 5 independent layers (L1–L5). Each layer gives 0–100, where 100 is the best result in your comparison set. The **OVERALL** score is a weighted sum (weights adapt to your priorities, shown below the table).
+
+**L1 — CAPEX.** Total equipment cost. 100 goes to the cheapest; others scale down by how much more expensive they are.
+
+**L2 — Architectural efficiency.** How rationally the addressable space is used — logical signals per occupied address. Higher = fewer wasted addresses, better expansion headroom.
+
+**L3 — Functionality.** Match of system features to your requirements (mobile app, cloud monitoring, integrations). Counted only if you specified such needs.
+
+**L4 — Operational quality.** Reliability, false-alarm protection, line reserve, serviceability.
+
+**L5 — TCO.** Total cost of ownership over the lifetime: equipment + maintenance + replacements. Uses your chosen horizon.
+
+**Reading the table.** 🥇🥈🥉 — ranking by overall score. CAPEX — upfront equipment cost. "Maint./mo" — monthly maintenance. The best OVERALL isn't always the cheapest CAPEX: a higher upfront cost can pay off through lower maintenance over the lifetime.""",
+    },
 }
 
 
