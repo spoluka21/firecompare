@@ -159,11 +159,6 @@ def render_ai_tab(catalog):
     st.markdown(f"### {t('ai_header')}")
     st.caption(t("ai_caption"))
     
-    # Стійкий підсумок результату прямо у вкладці AI (надійніше за скрол/переключення
-    # вкладки, які Streamlit не підтримує). Показується, поки є розрахунок.
-    if st.session_state.get("last_result") and st.session_state.get("ai_tool_input"):
-        _render_result_summary(st.session_state["last_result"])
-    
     # Перевірка ключа
     agent = AIAgent()
     if not agent.is_available():
@@ -258,6 +253,12 @@ def render_ai_tab(catalog):
                     key="ai_run_calc",
                 ):
                     _run_calculation_from_ai(catalog)
+        
+        # Підсумок результату ПРЯМО ТУТ, де користувач щойно натиснув кнопку
+        # (надійніше за плашку вгорі — її не видно після кліку внизу чату).
+        if st.session_state.get("last_result") and st.session_state.get("ai_tool_input"):
+            with st.chat_message("assistant"):
+                _render_result_summary(st.session_state["last_result"])
         
         # Input для нового повідомлення
         user_input = st.chat_input(t("ai_input_placeholder"))
