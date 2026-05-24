@@ -455,6 +455,12 @@ TRANSLATIONS = {
         "ua": "Повні результати, графіки та звіти — у вкладках 📊 Mode 1–4 угорі сторінки.",
         "en": "Full results, charts and reports — in tabs 📊 Mode 1–4 at the top of the page.",
     },
+    "ai_result_empty": {
+        "ua": "⚠️ Розрахунок виконано, але жоден виробник не пройшов для цієї конфігурації "
+              "(деталі й причини — у вкладці 📊 Mode 1).",
+        "en": "⚠️ Calculation done, but no manufacturer qualified for this configuration "
+              "(details and reasons — in the 📊 Mode 1 tab).",
+    },
     "ai_error": {"ua": "Помилка", "en": "Error"},
     "ai_token_usage": {"ua": "Токенів", "en": "Tokens"},
     
@@ -485,6 +491,7 @@ TRANSLATIONS = {
     "obj_hierarchy": {"ua": "Архітектура ППКП", "en": "Panel architecture"},
     "obj_hierarchy_yes": {"ua": "ієрархічна", "en": "hierarchical"},
     "col_frc": {"ua": "Вогнестійкий кабель (м)", "en": "Fire-resistant cable (m)"},
+    "col_normal_cable": {"ua": "Звичайний сигнальний кабель (м)", "en": "Normal signal cable (m)"},
     "quick_estimate_notice": {
         "ua": "⚡ Швидка оцінка: уточнено лише конфігурацію СПЗ, решта критеріїв "
               "(сертифікація, горизонт, хибні спрацювання тощо) узята за усередненими "

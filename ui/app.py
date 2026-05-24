@@ -287,8 +287,12 @@ with tab1:
     col4.metric(t("metric_sounders"), bom.sounders_count)
     
     # Вогнестійкий кабель — окрема метрика (детальний режим з інженерією)
+    # Кабель — звичайний завжди, вогнестійкий якщо є інженерія
+    cab1, cab2 = st.columns(2)
+    if getattr(bom, "normal_cable_m", 0) > 0:
+        cab1.metric(t("col_normal_cable"), f"≈ {bom.normal_cable_m:,.0f} м")
     if getattr(bom, "fire_resistant_cable_m", 0) > 0:
-        st.metric(t("col_frc"), f"≈ {bom.fire_resistant_cable_m:,.0f} м")
+        cab2.metric(t("col_frc"), f"≈ {bom.fire_resistant_cable_m:,.0f} м")
     
     st.markdown("---")
     

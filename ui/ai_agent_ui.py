@@ -121,26 +121,35 @@ def _render_result_summary(result):
     """
     Стійкий підсумок результату прямо у вкладці AI.
     Надійна заміна скролу/переключення вкладки (їх Streamlit не підтримує).
+    Показує банер ЗАВЖДИ після розрахунку, навіть якщо таблиця порожня.
     """
-    table = getattr(result, "comparison_table", None)
-    if not table:
-        return
-    
-    with st.container():
+    try:
+        table = getattr(result, "comparison_table", None) or []
+        feasible = [r for r in getattr(result, "manufacturer_results", []) if not r.excluded]
+        
+        if table:
+            st.success(t("ai_result_ready"))
+            medals = ["🥇", "🥈", "🥉"]
+            lines = []
+            for i, row in enumerate(table[:3]):
+                medal = medals[i] if i < 3 else "•"
+                name = row.get("manufacturer_name", "?")
+                capex = row.get("capex_uah", 0) or 0
+                overall = row.get("overall_score", None)
+                score_s = f" — {overall:.0f}/100" if overall is not None else ""
+                lines.append(f"{medal} **{name}** — CAPEX {capex:,.0f} ₴{score_s}")
+            st.markdown("\n\n".join(lines))
+            st.caption(t("ai_result_see_tabs"))
+        else:
+            # Таблиця порожня — усі виключені або помилка. Все одно повідомляємо.
+            st.warning(t("ai_result_empty"))
+            st.caption(t("ai_result_see_tabs"))
+        st.markdown("---")
+    except Exception:
+        # Навіть при помилці показуємо, що розрахунок виконано
         st.success(t("ai_result_ready"))
-        # Топ-3 коротко
-        medals = ["🥇", "🥈", "🥉"]
-        lines = []
-        for i, row in enumerate(table[:3]):
-            medal = medals[i] if i < 3 else "•"
-            name = row.get("manufacturer_name", "?")
-            capex = row.get("capex_uah", 0)
-            overall = row.get("overall_score", None)
-            score_s = f" — {overall:.0f}/100" if overall is not None else ""
-            lines.append(f"{medal} **{name}** — CAPEX {capex:,.0f} ₴{score_s}")
-        st.markdown("\n\n".join(lines))
         st.caption(t("ai_result_see_tabs"))
-    st.markdown("---")
+        st.markdown("---")
 
 
 def render_ai_tab(catalog):

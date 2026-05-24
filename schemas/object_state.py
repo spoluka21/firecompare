@@ -245,7 +245,7 @@ class ZoneComposition(BaseModel):
     smoke_dampers: int = Field(ge=0, default=0)  # клапани димовидалення
     air_pressure_fans: int = Field(ge=0, default=0)  # підпір повітря (вентилятори)
     fire_dampers: int = Field(ge=0, default=0)  # вогнезахисні клапани вентиляції
-    suppression_type: "SuppressionType" = Field(default=None)  # тип пожежогасіння
+    suppression_type: "SuppressionType" = Field(default=SuppressionType.NONE)  # тип пожежогасіння
     fire_pumps: int = Field(ge=0, default=0)  # насоси
     elevators_fire_mode: int = Field(ge=0, default=0)  # ліфти
     fire_doors_gates: int = Field(ge=0, default=0)  # протипожежні ворота/завіси
@@ -253,41 +253,60 @@ class ZoneComposition(BaseModel):
     # ВПВ (§4.3) — окремий випадок
     fire_hose_cabinets: int = Field(ge=0, default=0)  # к-сть кран-комплектів
     
+    # Адресні релейні модулі (пряма конфігурація): 1 модуль = 1 адреса в шлейфі.
+    # Використовується, коли кількість інженерних компонентів задана прямо
+    # (швидкий режим), без розбивки на типи. НЕ подвоюється на вхід/вихід.
+    relay_modules: int = Field(ge=0, default=0)
+    
     def has_engineering(self) -> bool:
         """Чи є хоч одна інженерна система (розширений блок)"""
         sup = self.suppression_type not in (None, SuppressionType.NONE)
         return any([
             self.smoke_dampers, self.air_pressure_fans, self.fire_dampers,
             sup, self.fire_pumps, self.elevators_fire_mode,
-            self.fire_doors_gates, self.fire_hose_cabinets,
+            self.fire_doors_gates, self.fire_hose_cabinets, self.relay_modules,
         ])
+    
+    def relay_device_count(self) -> int:
+        """
+        Кількість АДРЕСНИХ релейних модулів (одиниць у шлейфі).
+        Для підбору ППКП і кабелю рахуємо компоненти (адреси), не сигнали.
+        Прямо задані relay_modules + по одному модулю на кожну керовану систему.
+        """
+        if self.relay_modules:
+            return self.relay_modules
+        # Якщо задані конкретні типи — кожна одиниця = 1 адресний модуль
+        n = (self.smoke_dampers + self.air_pressure_fans + self.fire_dampers
+             + self.fire_pumps + self.elevators_fire_mode + self.fire_doors_gates
+             + self.fire_hose_cabinets)
+        if self.suppression_type not in (None, SuppressionType.NONE):
+            n += 1
+        return n
     
     def engineering_io_signals(self) -> tuple[int, int]:
         """
-        Кількість I/O-сигналів від інженерії (входи, виходи).
-        Кожна керована система: 1 вихід (керування) + 1 вхід (статус/ЗЗ).
-        Пожежогасіння: пуск (вихід) + статус + блокування (2 входи).
-        ВПВ: на кран-комплект — 1 вихід (запуск насосів) + 3 входи
-             (димовидалення-кнопка, статус крана, СМК).
+        Кількість I/O-сигналів від інженерії (входи, виходи) — для детального режиму
+        з конкретними типами систем. У швидкому режимі (relay_modules) сигнали
+        не деталізуються — там рахуються модулі (адреси) через relay_device_count().
         """
+        if self.relay_modules and not any([
+            self.smoke_dampers, self.air_pressure_fans, self.fire_dampers,
+            self.fire_pumps, self.elevators_fire_mode, self.fire_doors_gates,
+            self.fire_hose_cabinets,
+        ]) and self.suppression_type in (None, SuppressionType.NONE):
+            # Чистий прямий ввід: модулі = адреси, сигнали не подвоюємо
+            return self.relay_modules, 0
+        
         outputs = 0
         inputs = 0
-        # Клапани димовидалення: керування + ЗЗ
         outputs += self.smoke_dampers; inputs += self.smoke_dampers
-        # Підпір: керування + статус
         outputs += self.air_pressure_fans; inputs += self.air_pressure_fans
-        # Вогнезахисні клапани: керування + ЗЗ
         outputs += self.fire_dampers; inputs += self.fire_dampers
-        # Насоси: керування + статус(аварія)
         outputs += self.fire_pumps; inputs += self.fire_pumps
-        # Ліфти: команда + статус
         outputs += self.elevators_fire_mode; inputs += self.elevators_fire_mode
-        # Ворота/завіси: команда + статус положення
         outputs += self.fire_doors_gates; inputs += self.fire_doors_gates
-        # Пожежогасіння: пуск + (статус + блокування)
         if self.suppression_type not in (None, SuppressionType.NONE):
             outputs += 1; inputs += 2
-        # ВПВ: на кран — запуск насосів(вихід) + 3 входи
         outputs += self.fire_hose_cabinets
         inputs += self.fire_hose_cabinets * 3
         return inputs, outputs
@@ -324,6 +343,11 @@ class FunctionalZone(BaseModel):
     
     # Для довідки (експлікація приміщень якщо відома)
     rooms_count: Optional[int] = None
+    
+    # Явне перевизначення кількості детекторів (коли користувач указав точне число,
+    # напр. «система на 600 детекторів»). Якщо задано — рушій бере це число замість
+    # розрахунку з площі.
+    explicit_detectors: Optional[int] = Field(default=None, ge=0)
 
 
 class ParkingDetails(BaseModel):

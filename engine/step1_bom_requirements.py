@@ -81,6 +81,7 @@ class BOMRequirements(BaseModel):
     # Розрахункові внутрішні
     total_detection_area_m2: float = Field(ge=0)
     fire_resistant_cable_m: float = Field(ge=0, default=0.0)  # метраж вогнестійкого кабелю
+    normal_cable_m: float = Field(ge=0, default=0.0)  # метраж звичайного сигнального кабелю
     notes: list[str] = Field(default_factory=list)
     
     def total_loop_devices(self) -> int:
@@ -135,8 +136,15 @@ def calculate_detectors_for_zone(
         dtype = detector_type_for_purpose(zone_data.purpose)
         is_heat = (dtype == "heat")
     else:
-        heat_only_zones = {"underground_parking", "aboveground_parking", "kitchen", "boiler"}
-        is_heat = zone_name in heat_only_zones
+        heat_zones = {"underground_parking", "aboveground_parking", "kitchen", "boiler"}
+        is_heat = zone_name in heat_zones
+    
+    # Явне перевизначення: користувач указав точну кількість детекторів
+    explicit = getattr(zone_data, "explicit_detectors", None)
+    if explicit is not None:
+        if is_heat:
+            return 0, explicit, f"{zone_name}: задано явно — {explicit} теплових детекторів"
+        return explicit, 0, f"{zone_name}: задано явно — {explicit} димових детекторів"
     
     if zone_data.subdivision_type == SubdivisionType.OPEN:
         # Відкритий простір — пряма формула N = ceil(площа / S₀)
@@ -330,13 +338,14 @@ def calculate_zonal_engineering(object_data: ObjectData) -> dict:
     
     Повертає dict: inputs, outputs, fire_resistant_cable_m, notes.
     
-    Метраж вогнестійкого кабелю: орієнтовно (§9 рішення 3) —
-    к-сть I/O-сигналів інженерії × середня довжина траси.
+    Метраж вогнестійкого кабелю: орієнтовно — к-сть релейних компонентів (адрес)
+    × середня довжина траси (узгоджено: рахуємо від компонентів, не від сигналів).
     """
     AVG_FRC_RUN_M = 35.0  # середня довжина однієї вогнестійкої траси, м
     
     inputs = 0
     outputs = 0
+    relay_devices = 0
     frc_meters = 0.0
     notes = []
     
@@ -353,18 +362,24 @@ def calculate_zonal_engineering(object_data: ObjectData) -> dict:
         inputs += z_in
         outputs += z_out
         
-        # Вогнестійкий кабель — на кожен інженерний сигнал
-        zone_frc = (z_in + z_out) * AVG_FRC_RUN_M
+        # Релейні компоненти (адреси) — для шлейфів і кабелю
+        z_relays = comp.relay_device_count()
+        relay_devices += z_relays
+        
+        # Вогнестійкий кабель — на кожен релейний компонент (адресу), не на сигнал
+        zone_frc = z_relays * AVG_FRC_RUN_M
         frc_meters += zone_frc
         
         notes.append(
-            f"{zone_name}: інженерія {z_in} вх + {z_out} вих, "
+            f"{zone_name}: {z_relays} релейних компонентів "
+            f"({z_in} вх + {z_out} вих сигналів), "
             f"вогнестійкий кабель ≈ {zone_frc:.0f} м"
         )
     
     return {
         "inputs": inputs,
         "outputs": outputs,
+        "relay_devices": relay_devices,
         "fire_resistant_cable_m": round(frc_meters, 1),
         "notes": notes,
     }
@@ -437,6 +452,12 @@ def compute_bom_requirements(state: ObjectState) -> BOMRequirements:
     # 1.4 Оповіщувачі
     sounder_count, strobe = calculate_sounders(obj)
     
+    # Звичайний сигнальний кабель: 10 м на кожен адресний пристрій
+    # (детектори + МСР + оповіщувачі — усе на звичайних шлейфах)
+    NORMAL_CABLE_M_PER_DEVICE = 10.0
+    addressable_devices = smoke + heat + mcp_count + sounder_count
+    normal_cable_m = round(addressable_devices * NORMAL_CABLE_M_PER_DEVICE, 1)
+    
     all_notes = (
         ["=== ДЕТЕКТОРИ ==="] + det_notes +
         ["=== I/O СИГНАЛИ ==="] + io_notes +
@@ -449,9 +470,16 @@ def compute_bom_requirements(state: ObjectState) -> BOMRequirements:
             (" (зі стробами)" if strobe else ""),
         ]
     )
+    all_notes.append("=== КАБЕЛЬ ===")
+    all_notes.append(
+        f"Звичайний сигнальний: {addressable_devices} адр. пристроїв × "
+        f"{NORMAL_CABLE_M_PER_DEVICE:.0f} м ≈ {normal_cable_m:.0f} м"
+    )
     if frc_m > 0:
-        all_notes.append(f"=== ВОГНЕСТІЙКИЙ КАБЕЛЬ ===")
-        all_notes.append(f"Орієнтовний метраж: ≈ {frc_m:.0f} м (інженерія + ВПВ)")
+        all_notes.append(
+            f"Вогнестійкий (інженерія + ВПВ): {zonal.get('relay_devices', 0)} компонентів "
+            f"× 35 м ≈ {frc_m:.0f} м"
+        )
     
     return BOMRequirements(
         smoke_detectors_count=smoke,
@@ -463,5 +491,6 @@ def compute_bom_requirements(state: ObjectState) -> BOMRequirements:
         sounders_need_strobe=strobe,
         total_detection_area_m2=area,
         fire_resistant_cable_m=frc_m,
+        normal_cable_m=normal_cable_m,
         notes=all_notes,
     )

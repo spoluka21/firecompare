@@ -221,6 +221,16 @@ STRICT LIMIT: ask AT MOST 3 clarifying questions, and only about the FAS CONFIGU
      beyond basic alarm+evacuation — a yes/no level, not a detailed breakdown.
 You may combine these into fewer questions if the user already gave some.
 
+DIRECT NUMBERS: if the user already states EXACT quantities (e.g. "system for 600
+detectors + 60 engineering components"), capture them directly:
+  - put the detector count into direct_detectors_count
+  - put the engineering/relay component count into direct_relay_count
+Then you do NOT need to ask about area or composition — you already have the sizing.
+Do NOT ask the user to itemize WHICH engineering devices (valves vs dampers vs pumps) —
+for a comparative EQUIPMENT estimate only the COUNT matters, not the type. Asking for the
+breakdown in quick mode is unnecessary and annoying. (Type matters only for maintenance
+tariffs — and only if the user also wants a maintenance calculation.)
+
 For EVERYTHING ELSE (certification level, lifetime horizon, false-alarm importance,
 financing, mobile app, cloud, maintenance distance, manufacturers) — DO NOT ASK.
 Use AVERAGE / standard default values automatically:
@@ -281,6 +291,26 @@ SUBMIT_TOOL = {
                 "minimum": 0,
                 "default": 0,
                 "description": "Number of floors below ground (basement/parking)",
+            },
+            "direct_detectors_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": (
+                    "If the user states an EXACT number of detectors (e.g. 'system for "
+                    "600 detectors'), put it here. Overrides area-based estimate. Leave "
+                    "out if the user only gives area and wants an estimate."
+                ),
+            },
+            "direct_relay_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": (
+                    "If the user states a number of engineering/relay components (valves, "
+                    "dampers, fire-hose-cabinet buttons, feedback-monitored systems), put "
+                    "the COUNT here. These go on fire-resistant loops. For a comparative "
+                    "equipment estimate the exact TYPE does not matter — only the count. "
+                    "Do NOT ask the user to itemize types in quick mode."
+                ),
             },
             "certification_requirement": {
                 "type": "string",
@@ -704,6 +734,42 @@ def build_state_from_tool_input(
             composition=composition,
             subdivision_type=subdiv,
         )
+    
+    # Пряма конфігурація (швидкий режим): якщо користувач указав точні числа
+    # детекторів / інженерних компонентів — будуємо синтетичну зону з ними,
+    # замість оцінки з площі. Це закриває сценарій «порахуй систему на N детекторів
+    # + M інженерних компонентів».
+    direct_det = tool_input.get("direct_detectors_count")
+    direct_relay = tool_input.get("direct_relay_count")
+    if not zones_dict and (direct_det is not None or direct_relay is not None):
+        # Релейні компоненти моделюємо як інженерні сигнали (вогнестійкі шлейфи).
+        # Розподіляємо кількість на наявні типи I/O порівну для простоти оцінки;
+        # для порівняння обладнання важлива сумарна кількість, не тип.
+        relay_n = int(direct_relay or 0)
+        synth_comp = None
+        if relay_n > 0:
+            # Прямий ввід: релейні як адресні модулі (1 модуль = 1 адреса),
+            # без подвоєння на вхід/вихід.
+            synth_comp = ZoneComposition(relay_modules=relay_n)
+        
+        det_n = int(direct_det) if direct_det is not None else 0
+        # Площа під синтетичну зону: якщо детектори задані прямо — рахуємо площу так,
+        # щоб calculate_detectors дав саме цю кількість (open zone: area = det × S0).
+        synth_area = float(tool_input.get("total_area_m2", det_n * 77 if det_n else 100))
+        
+        synth_zone = FunctionalZone(
+            area_m2=synth_area,
+            purpose=ZonePurpose.OFFICE,
+            floors=int(tool_input.get("floors_above", 1)),
+            requires_automation=True,
+            composition=synth_comp,
+            subdivision_type=SubdivisionType.OPEN,
+        )
+        # Якщо детектори задані прямо — фіксуємо точну кількість через поле rooms_count
+        # (рушій підхопить його як explicit override — додамо нижче в движку).
+        if direct_det is not None:
+            synth_zone.explicit_detectors = det_n
+        zones_dict["object_total"] = synth_zone
     
     object_data = ObjectData(
         object_type=object_type,
