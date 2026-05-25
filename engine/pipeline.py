@@ -64,6 +64,10 @@ class ManufacturerResult(BaseModel):
     feasible: bool = True
     excluded: bool = False
     exclusion_reason: Optional[str] = None
+    
+    # Блок B: оптимальна конфігурація ППКП за шлейфами (принцип #5)
+    # dict: units, model_name, normal_loops, fire_resistant_loops, total_panel_price_uah тощо
+    loop_config: Optional[dict] = None
 
 
 class CalculationResult(BaseModel):
@@ -216,6 +220,44 @@ def run_calculation(
             else:
                 allocations_for_scoring[mfr.manufacturer_id] = alloc
         
+        # Блок B: оптимальна конфігурація ППКП за шлейфами (принцип #5).
+        # Рахуємо ЗАВЖДИ (навіть якщо старий allocation дав overflow), бо принцип #5:
+        # будь-яку систему можна реалізувати кількома приладами — ніхто не вибуває.
+        try:
+            from engine.loop_allocation import optimize_panels_for_manufacturer
+            from engine.step1_bom_requirements import calculate_zonal_engineering
+            detectors_total = bom.smoke_detectors_count + bom.heat_detectors_count
+            _zonal = calculate_zonal_engineering(state.object)
+            relay_total = _zonal.get("relay_devices", 0)
+            opt = optimize_panels_for_manufacturer(
+                detectors_total, relay_total, mfr.panels,
+                is_addressable=getattr(state.object, "is_addressable", True),
+            )
+            if opt.get("feasible"):
+                opt["normal_cable_m"] = bom.normal_cable_m
+                opt["fire_resistant_cable_m"] = bom.fire_resistant_cable_m
+                mfr_result.loop_config = opt
+                
+                # ПОРЯТУНОК (принцип #5): якщо старий allocation виключив через
+                # переповнення шлейфів/адрес (loop_overflow / address_overflow), але
+                # оптимізатор знайшов рішення з кількох приладів — повертаємо виробника
+                # в порівняння з конфігурацією оптимізатора. Compliance-виключення
+                # (сертифікація) при цьому НЕ скасовуємо — вони залишаються чинними.
+                overflow_excluded = (
+                    mfr_result.excluded
+                    and mfr_result.compliance.overall_status != "fail"
+                    and mfr_result.exclusion_reason
+                    and "overflow" in mfr_result.exclusion_reason.lower()
+                )
+                if overflow_excluded:
+                    mfr_result.excluded = False
+                    mfr_result.feasible = True
+                    mfr_result.exclusion_reason = None
+                    mfr_result.capex_uah = opt["total_panel_price_uah"]
+                    mfr_result.panel_count = opt["units"]
+        except Exception:
+            pass  # оптимізатор не критичний — не ламаємо основний розрахунок
+        
         result.manufacturer_results.append(mfr_result)
     
     # ─────────────────────────────────────────────────────────
@@ -302,6 +344,10 @@ def run_calculation(
             bd = r.maintenance.get("breakdown", {})
             row["maintenance_month_uah"] = bd.get("price_final_month")
             row["maintenance_year_uah"] = bd.get("price_final_year")
+        
+        # Блок B: конфігурація ППКП за шлейфами
+        if r.loop_config:
+            row["loop_config"] = r.loop_config
         
         result.comparison_table.append(row)
     

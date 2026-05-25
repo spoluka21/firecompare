@@ -99,7 +99,17 @@ def loops_for_relays(relays: int, panel: Panel) -> tuple[int, str]:
         n = math.ceil(relays / limit)
         return n, f"{relays} релейних / {limit} на шлейф = {n} вогнестійких шлейфів"
     
-    # Консервативна оцінка: релейні займають загальну ємність шлейфа
+    if scope == "shared":
+        # Релейні ділять спільну адресну ємність з детекторами, але фізично йдуть
+        # окремим вогнестійким шлейфом (різний кабель). Ємність вогнестійкого шлейфа
+        # = загальна ємність адрес шлейфа.
+        n = math.ceil(relays / panel.devices_per_loop)
+        return n, (
+            f"{relays} релейних (спільна адресна ємність {panel.devices_per_loop}/шлейф) "
+            f"= {n} вогнестійких шлейфів"
+        )
+    
+    # Консервативна оцінка: релейний ліміт невідомий → загальна ємність шлейфа
     n = math.ceil(relays / panel.devices_per_loop)
     return n, (
         f"релейний ліміт невідомий — оцінка за загальною ємністю "
@@ -130,3 +140,95 @@ def total_loops_needed(detectors: int, relays: int, panel: Panel) -> dict:
         "fire_note": fire_note,
         "price_uah": panel.price_uah_no_vat or 0.0,
     }
+
+
+def optimize_panels_for_manufacturer(
+    detectors: int,
+    relays: int,
+    panels: list[Panel],
+    is_addressable: Optional[bool] = None,
+) -> dict:
+    """
+    Оптимізатор підбору ППКП для одного виробника (Блок B, кроки 4-7).
+    
+    Принцип #5: будь-яку систему можна реалізувати на обладнанні будь-якого
+    виробника — за потреби поділивши на кілька приладів (підсистем). Ніхто не
+    «вибуває». Питання лише в КІЛЬКОСТІ приладів (ціна) та ефективності.
+    
+    is_addressable: якщо задано (True/False) — порівнюються ЛИШЕ панелі того класу
+    (адресні з адресними, безадресні з безадресними). Адресні й безадресні —
+    різні класи систем, їх не порівнюють між собою. None = без фільтра.
+    
+    Логіка:
+      1. Рахуємо потрібну кількість шлейфів (звичайні + вогнестійкі).
+      2. Для кожної моделі ППКП визначаємо, скільки таких приладів треба, щоб
+         покрити і адреси, і шлейфи (з поділом на підсистеми за потреби).
+      3. Вартість = кількість приладів × ціна моделі.
+      4. Обираємо НАЙДЕШЕВШУ конфігурацію серед усіх моделей виробника.
+    
+    Повертає dict з оптимальною конфігурацією.
+    """
+    if not panels:
+        return {"feasible": False, "reason": "немає панелей виробника"}
+    
+    # Фільтр за класом системи (адресна / безадресна)
+    if is_addressable is not None:
+        panels = [p for p in panels if getattr(p, "is_addressable", True) == is_addressable]
+        if not panels:
+            cls = "адресних" if is_addressable else "безадресних"
+            return {"feasible": False, "reason": f"немає {cls} ППКП у цього виробника"}
+    
+    candidates = []
+    
+    for panel in panels:
+        cap_addr = panel.max_total_devices  # макс адрес на один прилад
+        cap_loops = panel.max_loops
+        dev_per_loop = panel.devices_per_loop
+        
+        if cap_addr <= 0 or dev_per_loop <= 0:
+            continue
+        
+        # Скільки шлейфів треба загалом (звичайні для детекторів + вогнестійкі для релейних)
+        normal_loops = math.ceil(detectors / dev_per_loop) if detectors else 0
+        fire_loops_per_unit, _ = loops_for_relays(relays, panel)
+        # Загальна потреба у шлейфах (фізично роздільних через кабель)
+        total_loops_need = normal_loops + (fire_loops_per_unit if relays else 0)
+        
+        # Скільки приладів треба, щоб покрити:
+        #  (а) за адресами: всі адресні + релейні (релейні теж займають адреси, окрім
+        #      Cofem per_panel, де релейні окремо — але для простоти рахуємо адреси разом)
+        total_addresses = detectors + relays
+        units_by_addr = math.ceil(total_addresses / cap_addr)
+        #  (б) за шлейфами
+        units_by_loops = math.ceil(total_loops_need / cap_loops) if cap_loops else 1
+        
+        units = max(units_by_addr, units_by_loops, 1)
+        
+        price = panel.price_uah_no_vat or 0.0
+        if price <= 0:
+            continue
+        
+        total_price = units * price
+        
+        candidates.append({
+            "panel_id": panel.panel_id,
+            "model_name": panel.model_name,
+            "units": units,
+            "unit_price_uah": price,
+            "total_panel_price_uah": total_price,
+            "normal_loops": normal_loops,
+            "fire_resistant_loops": fire_loops_per_unit if relays else 0,
+            "total_loops_needed": total_loops_need,
+            "max_loops_per_unit": cap_loops,
+            "max_addr_per_unit": cap_addr,
+            "limiting_factor": "адреси" if units_by_addr >= units_by_loops else "шлейфи",
+        })
+    
+    if not candidates:
+        return {"feasible": False, "reason": "немає панелей з цінами"}
+    
+    # Найдешевша конфігурація (кроки 6-7: порівнюємо загальну вартість приладів)
+    best = min(candidates, key=lambda c: c["total_panel_price_uah"])
+    best["feasible"] = True
+    best["all_candidates"] = sorted(candidates, key=lambda c: c["total_panel_price_uah"])
+    return best

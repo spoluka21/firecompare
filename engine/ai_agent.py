@@ -139,6 +139,17 @@ inconsistency and ask the user to clarify. Examples of implausible configuration
 When in doubt about whether a configuration is sensible, ask a short clarifying question
 BEFORE submitting. A good expert never computes nonsense silently.
 
+# ADDRESSABLE vs NON-ADDRESSABLE (ask for systems with 100+ components)
+If the system has roughly 100 or more components (detectors + engineering), you MUST ask
+the user which system CLASS they want: addressable or non-addressable (zonal). There is no
+fixed regulatory threshold mandating one over the other — it is the designer's decision.
+These are different classes and are compared only within the same class. Ukrainian phrasing:
+"Для системи такого розміру (100+ компонентів) можливі два класи: адресна або безадресна
+(зональна). Адресні системи дають точну локалізацію спрацювання, безадресні — простіші й
+дешевші, але показують лише зону. Який клас системи розглядаємо?"
+Put the answer in is_addressable (true = addressable, false = non-addressable).
+For small systems (<100 components) default to addressable without asking.
+
 # MANDATORY DISCLAIMER AT THE START
 Your VERY FIRST message must include a brief note that this calculation does NOT include
 the cost of installation and commissioning works (монтажні та пусконалагоджувальні роботи).
@@ -310,6 +321,17 @@ SUBMIT_TOOL = {
                     "the COUNT here. These go on fire-resistant loops. For a comparative "
                     "equipment estimate the exact TYPE does not matter — only the count. "
                     "Do NOT ask the user to itemize types in quick mode."
+                ),
+            },
+            "is_addressable": {
+                "type": "boolean",
+                "description": (
+                    "System class: addressable (true) or non-addressable/zonal (false). "
+                    "For systems with 100+ components you MUST ask the user which class "
+                    "they want — there is no fixed regulatory threshold, it is the "
+                    "designer's choice. Addressable and non-addressable are different "
+                    "system classes and are compared only within the same class. "
+                    "Default true (most modern systems are addressable)."
                 ),
             },
             "certification_requirement": {
@@ -774,6 +796,7 @@ def build_state_from_tool_input(
     object_data = ObjectData(
         object_type=object_type,
         object_structure=ObjectStructure(tool_input.get("object_structure", "single")),
+        is_addressable=bool(tool_input.get("is_addressable", True)),
         total_area_m2=float(tool_input["total_area_m2"]),
         floors_above=int(tool_input["floors_above"]),
         floors_below=int(tool_input.get("floors_below", 0)),

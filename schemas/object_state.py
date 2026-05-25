@@ -438,6 +438,9 @@ class ObjectData(BaseModel):
     # Блок A — Базові параметри
     object_type: ObjectType
     object_structure: "ObjectStructure" = Field(default=ObjectStructure.SINGLE)
+    # Клас системи: адресна (True) чи безадресна/зональна (False).
+    # Для систем 100+ компонентів задається користувачем; впливає на фільтр ППКП.
+    is_addressable: bool = Field(default=True)
     stage: ConstructionStage = ConstructionStage.NEW_CONSTRUCTION
     phases: int = Field(ge=1, default=1)
     total_area_m2: float = Field(gt=0)

@@ -188,7 +188,12 @@ class Panel(BaseModel):
     # Якщо None — релейних даних немає, застосовується консервативна оцінка
     # (релейні займають загальну ємність devices_per_loop).
     relay_devices_limit: Optional[int] = Field(default=None, ge=0)
-    relay_limit_scope: Optional[str] = Field(default=None)  # "per_loop" | "per_panel" | None
+    relay_limit_scope: Optional[str] = Field(default=None)  # "per_loop" | "per_panel" | "shared" | None
+    
+    # Клас системи: адресна (True) чи безадресна/зональна (False).
+    # Впливає на порівняння: адресні й безадресні не порівнюються між собою —
+    # це фундаментально різні класи. За замовчуванням адресна (більшість сучасних ППКП).
+    is_addressable: bool = Field(default=True)
     
     # Експлуатаційні
     polling_time_ms: Optional[int] = None

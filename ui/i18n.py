@@ -493,6 +493,20 @@ TRANSLATIONS = {
     "obj_hierarchy_yes": {"ua": "ієрархічна", "en": "hierarchical"},
     "col_frc": {"ua": "Вогнестійкий кабель (м)", "en": "Fire-resistant cable (m)"},
     "col_normal_cable": {"ua": "Звичайний сигнальний кабель (м)", "en": "Normal signal cable (m)"},
+    "loop_config_title": {"ua": "🔌 Конфігурація ППКП і шлейфів по виробниках", "en": "🔌 Panel & loop configuration by manufacturer"},
+    "loop_config_hint": {
+        "ua": "Оптимальний підбір приладів за вашою конфігурацією. Кожну систему можна "
+              "реалізувати в будь-якого виробника — різниця в кількості приладів і шлейфів. "
+              "Звичайні шлейфи — для детекторів, вогнестійкі — для інженерних компонентів.",
+        "en": "Optimal panel selection for your configuration. Any system can be built by any "
+              "manufacturer — the difference is in the number of panels and loops. Normal loops "
+              "for detectors, fire-resistant loops for engineering components.",
+    },
+    "col_mfr": {"ua": "Виробник", "en": "Manufacturer"},
+    "col_panel_config": {"ua": "Прилади", "en": "Panels"},
+    "col_loops_normal": {"ua": "Звич. шлейфи", "en": "Normal loops"},
+    "col_loops_fire": {"ua": "Вогнест. шлейфи", "en": "Fire-resist. loops"},
+    "col_panel_price": {"ua": "Вартість приладів (₴)", "en": "Panel cost (₴)"},
     "quick_estimate_notice": {
         "ua": "⚡ Швидка оцінка: уточнено лише конфігурацію СПЗ, решта критеріїв "
               "(сертифікація, горизонт, хибні спрацювання тощо) узята за усередненими "

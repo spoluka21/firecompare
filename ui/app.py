@@ -387,6 +387,23 @@ if _active == "mode1":
                     name = display_name(r.manufacturer_id, r.manufacturer_name)
                     st.markdown(f"❌ **{name}** — {reason}")
         
+        # Конфігурація ППКП по виробниках (Блок B — оптимізатор за шлейфами)
+        with_config = [r for r in result.comparison_table if r.get("loop_config")]
+        if with_config:
+            with st.expander(t("loop_config_title"), expanded=True):
+                st.caption(t("loop_config_hint"))
+                cfg_rows = []
+                for row in with_config:
+                    lc = row["loop_config"]
+                    cfg_rows.append({
+                        t("col_mfr"): row["manufacturer_name"],
+                        t("col_panel_config"): f"{lc['units']}× {lc['model_name']}",
+                        t("col_loops_normal"): lc.get("normal_loops", 0),
+                        t("col_loops_fire"): lc.get("fire_resistant_loops", 0),
+                        t("col_panel_price"): f"{lc.get('total_panel_price_uah', 0):,.0f}",
+                    })
+                st.dataframe(pd.DataFrame(cfg_rows), use_container_width=True, hide_index=True)
+        
         feasible = [r for r in result.manufacturer_results 
                    if not r.excluded and r.scores and r.scores.applied_weights]
         if feasible:

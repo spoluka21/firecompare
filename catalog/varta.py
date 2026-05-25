@@ -69,11 +69,13 @@ VARTA = Manufacturer(
     panels=[
         Panel(panel_id="varta_adres", model_name="Варта-Адрес",
               panel_type=PanelType.MODULAR, max_loops=15, devices_per_loop=127, max_total_devices=1905,
+              relay_devices_limit=40, relay_limit_scope="per_loop",
               interfaces=["RS485"],
               price_uah_no_vat=34410.0, pricing_status=PricingStatus.QUOTED,
               pricing_notes="Модульна, розширюється CV1510"),
         Panel(panel_id="varta_adres_cv1500", model_name="Варта-Адрес CV1500",
               panel_type=PanelType.COMPACT, max_loops=4, devices_per_loop=127, max_total_devices=508,
+              relay_devices_limit=40, relay_limit_scope="per_loop",
               interfaces=["RS485"],
               price_uah_no_vat=59184.0, pricing_status=PricingStatus.QUOTED,
               pricing_notes="Компактний корпус"),
